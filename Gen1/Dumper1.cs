@@ -37,8 +37,8 @@ namespace PKHeX.EncounterSlotDumper
                 ylw_fish[i].Location = DumpUtil.YFishIndexes[i];
 
             var rb = red_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
-            var bb = red_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
-            var yb = red_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
+            var bb = blu_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
+            var yb = ylw_gw.Concat(ylw_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
 
             Write(rb, "encounter_red.pkl");
             Write(bb, "encounter_blue.pkl");
