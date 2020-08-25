@@ -99,7 +99,8 @@ namespace PKHeX.EncounterSlotDumper
 
         private static void WriteSlot(BinaryWriter bw, EncounterSlot4 slot)
         {
-            bw.Write((byte)slot.Species);
+            bw.Write((ushort)slot.Species);
+            bw.Write((byte)slot.Form);
             bw.Write((byte)slot.SlotNumber);
             bw.Write((byte)slot.LevelMin);
             bw.Write((byte)slot.LevelMax);

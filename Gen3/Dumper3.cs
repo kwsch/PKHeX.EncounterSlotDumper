@@ -74,7 +74,8 @@ namespace PKHeX.EncounterSlotDumper
 
         private static void WriteSlot(BinaryWriter bw, EncounterSlot3 slot)
         {
-            bw.Write((byte)slot.Species);
+            bw.Write((ushort)slot.Species);
+            bw.Write((byte)slot.Form);
             bw.Write((byte)slot.SlotNumber);
             bw.Write((byte)slot.LevelMin);
             bw.Write((byte)slot.LevelMax);
@@ -108,7 +109,8 @@ namespace PKHeX.EncounterSlotDumper
 
         private static void WriteSlotSwarm(BinaryWriter bw, EncounterSlot3Swarm slot)
         {
-            bw.Write((byte)slot.Species);
+            bw.Write((ushort)slot.Species);
+            bw.Write((byte)slot.Form);
             bw.Write((byte)slot.SlotNumber);
             bw.Write((byte)slot.LevelMin);
             bw.Write((byte)slot.LevelMax);
