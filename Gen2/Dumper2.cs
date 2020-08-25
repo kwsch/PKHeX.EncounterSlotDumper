@@ -170,11 +170,25 @@ namespace PKHeX.EncounterSlotDumper
             var first = (EncounterSlot2) area.Slots[0];
             bw.Write((byte) first.Time);
 
-            bw.Write((byte) area.Type);
-            bw.Write((byte) 0xFF);
+            var type = (byte) area.Type;
+            bw.Write(type);
+            if ((SlotType)type == SlotType.Surf)
+            {
+                bw.Write(area.Rates[0]);
+            }
+            else if ((SlotType)type == SlotType.BugContest)
+            {
+                bw.Write(area.Rates[0]);
+            }
+            else
+            {
+                bw.Write((byte)0xFF);
+                if (area.Rates.Length == 1)
+                    throw new Exception();
+                foreach (byte b in area.Rates)
+                    bw.Write(b);
+            }
 
-            foreach (byte b in area.Rates)
-                bw.Write(b);
             foreach (var s in area.Slots.Cast<EncounterSlot2>())
                 WriteSlot(bw, s);
             return ms.ToArray();

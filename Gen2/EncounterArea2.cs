@@ -28,7 +28,7 @@ namespace PKHeX.EncounterSlotDumper
 
         // Fishing Tables are not associated to a single map; a map picks a table to use.
         // For all maps that use a table, create a new EncounterArea with reference to the table's slots.
-        private static readonly sbyte[] convMapIDtoFishLocationID =
+        private static readonly sbyte[] FishGroupForMapID =
         {
             -1,  1, -1,  0,  3,  3,  3, -1, 10,  3,  2, -1, -1,  2,  3,  0,
             -1, -1,  3, -1, -1, -1,  3, -1, -1, -1, -1,  0, -1, -1,  0,  9,
@@ -51,27 +51,27 @@ namespace PKHeX.EncounterSlotDumper
             var f = GetAreas2Fishing(data, ref ofs);
 
             var areas = new List<EncounterArea2>();
-            for (int i = 0; i < convMapIDtoFishLocationID.Length; i++)
+            for (short i = 0; i < FishGroupForMapID.Length; i++)
             {
-                var loc = convMapIDtoFishLocationID[i];
-                if (loc == -1) // no table for map
-                    continue;
+                var group = FishGroupForMapID[i];
+                if (group != -1)
+                    AddTableForLocation(group, i);
+            }
 
-                var fake = (EncounterArea2)f[loc].MemberwiseClone();
-                fake.Location = (short)i;
-                areas.Add(fake);
+            void AddTableForLocation(int group, short locationID)
+            {
+                foreach (var t in f.Where(z => z.Location == group))
+                {
+                    var fake = (EncounterArea2)t.MemberwiseClone();
+                    fake.Location = locationID;
+                    areas.Add(fake);
+                }
             }
 
             // Some maps have two tables. Fortunately, there's only two. Add the second table.
-            for (int i = 0; i < 3; i++)
-            {
-                var c1 = (EncounterArea2)f[(1 * 3) + i].MemberwiseClone();
-                c1.Location = 0x1B; // Olivine City (0: Harbor, 1: City)
-                var c2 = (EncounterArea2)f[(3 * 3) + i].MemberwiseClone();
-                c2.Location = 0x2E; // Silver Cave (2: Inside, 3: Outside)
-                areas.Add(c1); // Olivine City (0: Harbor, 1: City)
-                areas.Add(c2);
-            }
+            AddTableForLocation(1, 27); // Olivine City (0: Harbor, 1: City)
+            AddTableForLocation(3, 46); // Silver Cave (2: Inside, 3: Outside)
+
             return areas.ToArray();
         }
 
