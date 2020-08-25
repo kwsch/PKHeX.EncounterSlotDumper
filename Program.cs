@@ -26,6 +26,18 @@ namespace PKHeX.EncounterSlotDumper
             Dumper4.DumpGen4();
 
             Console.WriteLine();
+            Console.WriteLine("Dumping Gen5 tables...");
+            Dumper5.DumpGen5();
+
+            Console.WriteLine();
+            Console.WriteLine("Dumping Gen6 tables...");
+            Dumper6.DumpGen6();
+
+            Console.WriteLine();
+            Console.WriteLine("Dumping Gen7 tables...");
+            Dumper7.DumpGen7();
+
+            Console.WriteLine();
             Console.WriteLine("Done!");
         }
     }

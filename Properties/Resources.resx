@@ -118,6 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="encounter_a" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen6\encounter_a.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_b" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen5\encounter_b.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_b2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen5\encounter_b2.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="encounter_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen1\encounter_blue.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -157,6 +166,15 @@
   <data name="encounter_lg" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen3\encounter_lg.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="encounter_mn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_mn.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_mn_sos" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_mn_sos.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_o" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen6\encounter_o.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="encounter_p" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen4\encounter_p.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -181,8 +199,38 @@
   <data name="encounter_silver_h" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen2\encounter_silver_h.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="encounter_sn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_sn.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_sn_sos" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_sn_sos.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="encounter_ss" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen4\encounter_ss.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_um" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_um.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_um_sos" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_um_sos.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_us" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_us.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_us_sos" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_us_sos.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_w" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen5\encounter_w.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_w2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen5\encounter_w2.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen6\encounter_x.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_y" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen6\encounter_y.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="encounter_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen1\encounter_yellow.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

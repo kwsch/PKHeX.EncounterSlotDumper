@@ -11,52 +11,59 @@ namespace PKHeX.EncounterSlotDumper
         /// <summary>
         /// Default (un-assigned) encounter slot type.
         /// </summary>
-        Any,
+        Any = 0,
 
         /// <summary>
         /// Slot is encountered via Grass.
         /// </summary>
-        Grass,
+        Grass = 1,
 
         /// <summary>
         /// Slot is encountered via Surfing.
         /// </summary>
-        Surf,
+        Surf = 2,
 
         /// <summary>
         /// Slot is encountered via Old Rod (Fishing).
         /// </summary>
-        Old_Rod,
+        Old_Rod = 3,
 
         /// <summary>
         /// Slot is encountered via Good Rod (Fishing).
         /// </summary>
-        Good_Rod,
+        Good_Rod = 4,
 
         /// <summary>
         /// Slot is encountered via Super Rod (Fishing).
         /// </summary>
-        Super_Rod,
+        Super_Rod = 5,
 
         /// <summary>
         /// Slot is encountered via Rock Smash.
         /// </summary>
-        Rock_Smash,
+        Rock_Smash = 6,
 
         /// <summary>
         /// Slot is encountered via Headbutt.
         /// </summary>
-        Headbutt,
+        Headbutt = 7,
 
         /// <summary>
         /// Slot is encountered via a Honey Tree.
         /// </summary>
-        HoneyTree,
+        HoneyTree = 8,
 
         /// <summary>
         /// Slot is encountered via the Bug Catching Contest.
         /// </summary>
-        BugContest,
+        BugContest = 9,
+
+        HiddenGrotto = 10,
+        GoPark = 11,
+        FriendSafari = 12,
+        Horde = 13,
+        Pokeradar = 14,
+        SOS = 15,
 
         // always used as a modifier to another slot type
 

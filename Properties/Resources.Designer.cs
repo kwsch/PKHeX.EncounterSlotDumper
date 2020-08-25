@@ -63,6 +63,36 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] encounter_a {
+            get {
+                object obj = ResourceManager.GetObject("encounter_a", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_b {
+            get {
+                object obj = ResourceManager.GetObject("encounter_b", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_b2 {
+            get {
+                object obj = ResourceManager.GetObject("encounter_b2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] encounter_blue {
             get {
                 object obj = ResourceManager.GetObject("encounter_blue", resourceCulture);
@@ -193,6 +223,36 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] encounter_mn {
+            get {
+                object obj = ResourceManager.GetObject("encounter_mn", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_mn_sos {
+            get {
+                object obj = ResourceManager.GetObject("encounter_mn_sos", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_o {
+            get {
+                object obj = ResourceManager.GetObject("encounter_o", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] encounter_p {
             get {
                 object obj = ResourceManager.GetObject("encounter_p", resourceCulture);
@@ -273,9 +333,109 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] encounter_sn {
+            get {
+                object obj = ResourceManager.GetObject("encounter_sn", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_sn_sos {
+            get {
+                object obj = ResourceManager.GetObject("encounter_sn_sos", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] encounter_ss {
             get {
                 object obj = ResourceManager.GetObject("encounter_ss", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_um {
+            get {
+                object obj = ResourceManager.GetObject("encounter_um", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_um_sos {
+            get {
+                object obj = ResourceManager.GetObject("encounter_um_sos", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_us {
+            get {
+                object obj = ResourceManager.GetObject("encounter_us", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_us_sos {
+            get {
+                object obj = ResourceManager.GetObject("encounter_us_sos", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_w {
+            get {
+                object obj = ResourceManager.GetObject("encounter_w", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_w2 {
+            get {
+                object obj = ResourceManager.GetObject("encounter_w2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_x {
+            get {
+                object obj = ResourceManager.GetObject("encounter_x", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_y {
+            get {
+                object obj = ResourceManager.GetObject("encounter_y", resourceCulture);
                 return ((byte[])(obj));
             }
         }
