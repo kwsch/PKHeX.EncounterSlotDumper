@@ -27,8 +27,8 @@ namespace PKHeX.EncounterSlotDumper
             var HG_Slots = EncounterArea4HGSS.GetArray4HGSS(BinLinker.Unpack(hg, "hg"));
             var SS_Slots = EncounterArea4HGSS.GetArray4HGSS(BinLinker.Unpack(ss, "ss"));
 
-            var DP_Feebas = GetFeebasArea(D_Slots[57]);
-            var Pt_Feebas = GetFeebasArea(Pt_Slots[57]);
+            var DP_Feebas = GetFeebasArea(D_Slots[55], D_Slots[56], D_Slots[57]);
+            var Pt_Feebas = GetFeebasArea(Pt_Slots[55], Pt_Slots[56], Pt_Slots[57]);
             var HG_Headbutt_Slots = EncounterArea4HGSS.GetArray4HGSS_Headbutt(BinLinker.Unpack(hb_hg, "hg"));
             var SS_Headbutt_Slots = EncounterArea4HGSS.GetArray4HGSS_Headbutt(BinLinker.Unpack(hb_ss, "ss"));
 
@@ -162,22 +162,37 @@ namespace PKHeX.EncounterSlotDumper
             }).ToArray()
         };
 
-        private static EncounterArea4DPPt[] GetFeebasArea(EncounterArea4DPPt template)
+        private static EncounterArea4DPPt[] GetFeebasArea(params EncounterArea4DPPt[] areas)
         {
-            Debug.Assert(template.Location == 50); // Mt Coronet
-            Debug.Assert(template.Slots.Last().Species == (int)Species.Whiscash);
-            var slots = template.Slots.Select(z => z.Clone()).ToArray();
-            Debug.Assert(slots[0].Species == (int)Species.Gyarados);
-            foreach (var s in slots)
-                s.Species = (int)Species.Feebas;
+#if DEBUG
+            Debug.Assert(areas.Last().Location == 50); // Mt Coronet
+            Debug.Assert(areas.Last().Slots.Last().Species == (int)Species.Whiscash);
+            Debug.Assert(areas.Last().Slots.First().Species == (int)Species.Gyarados);
 
-            var area = new EncounterArea4DPPt
+            Debug.Assert(areas.Length == 3);
+            Debug.Assert(areas[0].Type == SlotType.Old_Rod);
+            Debug.Assert(areas[1].Type == SlotType.Good_Rod);
+            Debug.Assert(areas[2].Type == SlotType.Super_Rod);
+#endif
+            var result = new EncounterArea4DPPt[3];
+            for (int i = 0; i < result.Length; i++)
             {
-                Location = template.Location,
-                Slots = slots,
-            };
-            return new[] { area };
+                var template = areas[i];
+                var slots = template.Slots.Select(z => z.Clone()).ToArray();
+                foreach (var s in slots)
+                    s.Species = (int)Species.Feebas;
+
+                var area = new EncounterArea4DPPt
+                {
+                    Location = template.Location,
+                    Slots = slots,
+                };
+                result[i] = area;
+            }
+
+            return result;
         }
+
         private static readonly int[] Shellos_EastSeaLocation_DP =
         {
             28, // Route 213
