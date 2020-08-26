@@ -167,7 +167,7 @@ namespace PKHeX.EncounterSlotDumper
 #if DEBUG
             Debug.Assert(areas.Last().Location == 50); // Mt Coronet
             Debug.Assert(areas.Last().Slots.Last().Species == (int)Species.Whiscash);
-            Debug.Assert(areas.Last().Slots.First().Species == (int)Species.Gyarados);
+            Debug.Assert(areas.Last().Slots[0].Species == (int)Species.Gyarados);
 
             Debug.Assert(areas.Length == 3);
             Debug.Assert(areas[0].Type == SlotType.Old_Rod);
@@ -255,28 +255,30 @@ namespace PKHeX.EncounterSlotDumper
             MarkG4AltFormSlots(Pt_Slots, 423, 1, Gastrodon_EastSeaLocation_Pt);
 
             const int Route209 = 24;
-            MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, Route209, EncounterType.Building_EnigmaStone, 1);
-            MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, Route209, EncounterType.Building_EnigmaStone, 1);
-            MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, Route209, EncounterType.Building_EnigmaStone, 1);
             const int StarkMountain = 84;
-            MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, StarkMountain, EncounterType.Cave_HallOfOrigin, 1);
-            MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, StarkMountain, EncounterType.Cave_HallOfOrigin, 1);
-            MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, StarkMountain, EncounterType.Cave_HallOfOrigin, 1);
             const int MtCoronet = 50;
-            MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters);
-            MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters);
-            MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters);
             const int RuinsOfAlph = 209;
-            MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, RuinsOfAlph, EncounterType.Cave_HallOfOrigin, 1);
-            MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, RuinsOfAlph, EncounterType.Cave_HallOfOrigin, 1);
-            MarkSpecific(HG_Slots, RuinsOfAlph, SlotType.Rock_Smash, EncounterType.DialgaPalkia);
-            MarkSpecific(SS_Slots, RuinsOfAlph, SlotType.Rock_Smash, EncounterType.DialgaPalkia);
             const int MtSilver = 219;
-            MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters);
-            MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters);
             const int Cianwood = 130;
+            MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, Route209, EncounterType.Building_EnigmaStone, 5, 6, 7, 8, 9); // Lost Tower (Gastly land slots)
+            MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, Route209, EncounterType.Building_EnigmaStone, 5, 6, 7, 8, 9); // Lost Tower (Gastly land slots)
+            MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, Route209, EncounterType.Building_EnigmaStone, 5, 6, 7, 8, 9); // Lost Tower (Gastly land slots)
+            MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, StarkMountain, EncounterType.Cave_HallOfOrigin, 1); // Stark Mountain Graveler 55
+            MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, StarkMountain, EncounterType.Cave_HallOfOrigin, 1); // Stark Mountain Graveler 55
+            MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, StarkMountain, EncounterType.Cave_HallOfOrigin, 1); // Stark Mountain Graveler 55
+            MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
+            MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
+            MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
+            MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, RuinsOfAlph, EncounterType.Cave_HallOfOrigin, 6, 7, 8, 9); // Alph Interior (Unown)
+            MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, RuinsOfAlph, EncounterType.Cave_HallOfOrigin, 6, 7, 8, 9); // Alph Interior (Unown)
+            MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Golbat-51 & Quagsire-45 [48 slots each]
+            MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Golbat-51 & Quagsire-45 [48 slots each] 
+
             MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, Cianwood, EncounterType.RockSmash);
             MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, Cianwood, EncounterType.RockSmash);
+
+            MarkSpecific(HG_Slots, RuinsOfAlph, SlotType.Rock_Smash, EncounterType.DialgaPalkia);
+            MarkSpecific(SS_Slots, RuinsOfAlph, SlotType.Rock_Smash, EncounterType.DialgaPalkia);
         }
 
         private static void MarkG4SlotsGreatMarsh(IEnumerable<EncounterArea> Areas, int location)
@@ -400,30 +402,30 @@ namespace PKHeX.EncounterSlotDumper
             return EncounterType.None;
         }
 
-        private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4[] Areas, int Location, EncounterType NormalEncounterType, params int[] SpecialEncounterFiles)
+        private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4[] Areas, int Location, EncounterType NormalEncounterType, params int[] tallGrassAreaIndexes)
         {
             var numfile = -1;
-            foreach (var Area in Areas.Where(x => x.Location == Location))
+            var areas = Areas.Where(x => x.Location == Location).ToArray();
+            foreach (var area in areas)
             {
-                if (Area.Type == SlotType.Grass)
-                    numfile++;
-                var GrassType = SpecialEncounterFiles.Contains(numfile) ? EncounterType.TallGrass : NormalEncounterType;
-                Area.TypeEncounter = GetEncounterTypeBySlotDPPt(Area.Type, GrassType);
+                numfile++;
+                var GrassType = tallGrassAreaIndexes.Contains(numfile) ? EncounterType.TallGrass : NormalEncounterType;
+                area.TypeEncounter = GetEncounterTypeBySlotDPPt(area.Type, GrassType);
             }
         }
 
-        private static void MarkHGSSEncounterTypeSlots_MultipleTypes(EncounterArea4[] Areas, int Location, EncounterType NormalEncounterType, params int[] SpecialEncounterFile)
+        private static void MarkHGSSEncounterTypeSlots_MultipleTypes(EncounterArea4[] Areas, int Location, EncounterType NormalEncounterType, params int[] tallGrassAreaIndexes)
         {
             // Area with two different encounter type for grass encounters
             // SpecialEncounterFile is tall grass encounter type, the other files have the normal encounter type for this location
             var HeadbuttType = GetHeadbuttEncounterType(Location);
             var numfile = -1;
-            foreach (var Area in Areas.Where(x => x.Location == Location))
+            var areas = Areas.Where(x => x.Location == Location).ToArray();
+            foreach (var area in areas)
             {
-                if (Area.Type == SlotType.Grass)
-                    numfile++;
-                var GrassType = SpecialEncounterFile.Contains(numfile) ? EncounterType.TallGrass : NormalEncounterType;
-                Area.TypeEncounter = GetEncounterTypeBySlotHGSS(Area.Type, GrassType, HeadbuttType);
+                numfile++;
+                var GrassType = tallGrassAreaIndexes.Contains(numfile) ? EncounterType.TallGrass : NormalEncounterType;
+                area.TypeEncounter = GetEncounterTypeBySlotHGSS(area.Type, GrassType, HeadbuttType);
             }
         }
 
@@ -537,7 +539,7 @@ namespace PKHeX.EncounterSlotDumper
 
         private static readonly int[] DPPt_MtCoronetExteriorEncounters =
         {
-            4, 5, 70
+            7, 8
         };
 
         /// <summary>
@@ -671,7 +673,7 @@ namespace PKHeX.EncounterSlotDumper
 
         private static readonly int[] HGSS_MtSilverCaveExteriorEncounters =
         {
-            2, 3
+            10, 11
         };
 
         private static readonly int[] HGSS_MixInteriorExteriorLocations =
