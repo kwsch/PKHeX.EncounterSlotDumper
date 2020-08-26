@@ -806,6 +806,7 @@ namespace PKHeX.EncounterSlotDumper
 
         private static readonly EncounterArea4HGSS BCC_PostSaturday = new EncounterArea4HGSS
         {
+            Location = 207, // National Park Catching Contest
             Type = SlotType.BugContest,
             Slots = new[]
             {
