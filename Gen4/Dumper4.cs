@@ -273,8 +273,8 @@ namespace PKHeX.EncounterSlotDumper
             MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, MtCoronet, EncounterType.Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
             MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, RuinsOfAlph, EncounterType.Cave_HallOfOrigin, 0, 1, 2, 3, 4, 5); // Alph Exterior (not Unown)
             MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, RuinsOfAlph, EncounterType.Cave_HallOfOrigin, 0, 1, 2, 3, 4, 5); // Alph Exterior (not Unown)
-            MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Golbat-51 & Quagsire-45 [48 slots each]
-            MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Golbat-51 & Quagsire-45 [48 slots each] 
+            MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
+            MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilver, EncounterType.Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
 
             MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, Cianwood, EncounterType.RockSmash);
             MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, Cianwood, EncounterType.RockSmash);
@@ -676,7 +676,7 @@ namespace PKHeX.EncounterSlotDumper
 
         private static readonly int[] HGSS_MtSilverCaveExteriorEncounters =
         {
-            10, 11
+            5, 10
         };
 
         private static readonly int[] HGSS_MixInteriorExteriorLocations =

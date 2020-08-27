@@ -86,7 +86,7 @@ namespace PKHeX.EncounterSlotDumper
                     ctr += 12;
                     areas.Add(new EncounterArea5 { Location = area.Location, Type = SlotType.Grass, Slots = area.Slots.Skip(ctr).Take(12).ToArray() }); // Double
                     ctr += 12;
-                    areas.Add(new EncounterArea5 { Location = area.Location, Type = SlotType.Grass, Slots = area.Slots.Skip(ctr).Take(5).ToArray() }); // Shaking
+                    areas.Add(new EncounterArea5 { Location = area.Location, Type = SlotType.Grass, Slots = area.Slots.Skip(ctr).Take(12).ToArray() }); // Shaking
                     ctr += 12;
 
                     areas.Add(new EncounterArea5 { Location = area.Location, Type = SlotType.Surf, Slots = area.Slots.Skip(ctr).Take(5).ToArray() }); // Surf
