@@ -36,13 +36,35 @@ namespace PKHeX.EncounterSlotDumper
             for (var i = 0; i < ylw_fish.Length; i++)
                 ylw_fish[i].Location = DumpUtil.YFishIndexes[i];
 
-            var rb = red_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
-            var bb = blu_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
-            var yb = ylw_gw.Concat(ylw_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
+            var rb = red_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type).ToArray();
+            var bb = blu_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type).ToArray();
+            var yb = ylw_gw.Concat(ylw_fish).OrderBy(z => z.Location).ThenBy(z => z.Type).ToArray();
 
             Write(rb, "encounter_red.pkl");
             Write(bb, "encounter_blue.pkl");
             Write(yb, "encounter_yellow.pkl");
+
+            var jp_bu = DumpGen1JPBU();
+            Write(rb.Concat(bb).Concat(yb), jp_bu, "encounter_blue_jp.pkl");
+        }
+
+        public static IOrderedEnumerable<EncounterArea1> DumpGen1JPBU()
+        {
+            var b = Resources.encounter_blue_jp;
+
+            var rbf = Resources.encounter_blue_jp_f;
+
+            var blu_gw = EncounterArea1.GetArray1GrassWater(b, 248);
+            var rb_fish = EncounterArea1.GetArray1Fishing(rbf, 33);
+
+            foreach (var area in blu_gw)
+                area.Location = DumpUtil.RBYLocIndexes[area.Location];
+
+            for (var i = 0; i < rb_fish.Length; i++)
+                rb_fish[i].Location = DumpUtil.RBFishIndexes[i];
+            rb_fish = rb_fish.Where(z => z.Location != 0).ToArray(); // remove duplicate locations (cerulean gym same as cerulean city)
+
+            return blu_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
         }
 
         public static void Write(IEnumerable<EncounterArea1> area, string name, string ident = "g1")
@@ -56,9 +78,39 @@ namespace PKHeX.EncounterSlotDumper
                 unique.Add(a);
             }
 
+            PackUnique(unique, name, ident);
+            Console.WriteLine($"Wrote {name} with {unique.Count} unique tables (originally {serialized.Length}).");
+        }
+
+        public static void Write(IEnumerable<EncounterArea1> other, IEnumerable<EncounterArea1> revised, string name, string ident = "g1")
+        {
+            var serializedOther = other.Select(Write).ToArray();
+            var serializedRevised = revised.Select(Write).ToArray();
+            List<byte[]> unique = new List<byte[]>();
+            foreach (var a in serializedOther)
+            {
+                if (unique.Any(z => z.SequenceEqual(a)))
+                    continue;
+                unique.Add(a);
+            }
+
+            List<byte[]> clean = new List<byte[]>();
+            foreach (var a in serializedRevised)
+            {
+                if (unique.Any(z => z.SequenceEqual(a)))
+                    continue;
+                unique.Add(a);
+                clean.Add(a);
+            }
+
+            PackUnique(clean, name, ident);
+            Console.WriteLine($"Wrote {name} with {clean.Count} unique tables (originally {serializedRevised.Length}).");
+        }
+
+        private static void PackUnique(List<byte[]> unique, string name, string ident)
+        {
             var packed = BinLinker.Pack(unique.ToArray(), ident);
             File.WriteAllBytes(name, packed);
-            Console.WriteLine($"Wrote {name} with {unique.Count} unique tables (originally {serialized.Length}).");
         }
 
         public static byte[] Write(EncounterArea1 area)

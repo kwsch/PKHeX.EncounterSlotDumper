@@ -103,6 +103,26 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] encounter_blue_jp {
+            get {
+                object obj = ResourceManager.GetObject("encounter_blue_jp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_blue_jp_f {
+            get {
+                object obj = ResourceManager.GetObject("encounter_blue_jp_f", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] encounter_crystal {
             get {
                 object obj = ResourceManager.GetObject("encounter_crystal", resourceCulture);
