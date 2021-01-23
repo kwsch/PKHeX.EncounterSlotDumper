@@ -41,6 +41,21 @@ namespace PKHeX.EncounterSlotDumper
             for (int i = ga.Length - gs_swarm.Length, j = 0; i < ga.Length; i++, j++)
                 ga[i].Location = sa[i].Location = gs_swarm[j];
 
+            // Strip out the no-tree headbutt areas.
+            {
+                var gl = gha.ToList();
+                var sl = sha.ToList();
+                var cl = cha.ToList();
+
+                gl.RemoveAll(z => (z.Type & SlotType.Headbutt) != 0 && !Dumper2h.Trees.ContainsKey(z.Location));
+                sl.RemoveAll(z => (z.Type & SlotType.Headbutt) != 0 && !Dumper2h.Trees.ContainsKey(z.Location));
+                cl.RemoveAll(z => (z.Type & SlotType.Headbutt) != 0 && !Dumper2h.Trees.ContainsKey(z.Location));
+
+                gha = gl.ToArray();
+                sha = sl.ToArray();
+                cha = cl.ToArray();
+            }
+
             var gr = ga.Concat(gha).Concat(f)
                 .Concat(new[] {EncounterBCC_GSC })
                 .OrderBy(z => z.Location).ThenBy(z => z.Type);
