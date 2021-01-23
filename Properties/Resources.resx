@@ -250,4 +250,13 @@
   <data name="personal_hgss" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\personal_hgss;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="text_gsc_00000_en" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen2\text_gsc_00000_en.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
+  </data>
+  <data name="trees" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen2\trees.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="trees_h_c" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen2\trees_h_c.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

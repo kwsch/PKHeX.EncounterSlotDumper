@@ -9,6 +9,8 @@ namespace PKHeX.EncounterSlotDumper
             Console.WriteLine("Hello World!");
             Console.WriteLine(args);
 
+            Dumper2h.Dump();
+
             Console.WriteLine();
             Console.WriteLine("Dumping Gen1 tables...");
             Dumper1.DumpGen1();

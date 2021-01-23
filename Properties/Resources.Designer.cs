@@ -499,5 +499,78 @@ namespace PKHeX.EncounterSlotDumper.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (None)
+        ///New Bark Town
+        ///Route 29
+        ///Cherrygrove City
+        ///Route 30
+        ///Route 31
+        ///Violet City
+        ///Sprout Tower
+        ///Route 32
+        ///Ruins of Alph
+        ///Union Cave
+        ///Route 33
+        ///Azalea Town
+        ///Slowpoke Well
+        ///Ilex Forest
+        ///Route 34
+        ///Goldenrod City
+        ///Goldenrod Radio Tower
+        ///Route 35
+        ///National Park
+        ///Route 36
+        ///Route 37
+        ///Ecruteak City
+        ///Tin Tower
+        ///Burned Tower
+        ///Route 38
+        ///Route 39
+        ///Olivine City
+        ///Lighthouse
+        ///Battle Tower
+        ///Route 40
+        ///Whirl Islands
+        ///Route 41
+        ///Cianwood City
+        ///Route 42
+        ///Mt. Mortar
+        ///Mahogany Town
+        ///Route 43
+        ///Lake of Rage
+        ///Route 44
+        ///Ice Path
+        ///Blackthorn City
+        ///Dragon&apos;s Den
+        ///Route 45
+        ///Dark [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string text_gsc_00000_en {
+            get {
+                return ResourceManager.GetString("text_gsc_00000_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] trees {
+            get {
+                object obj = ResourceManager.GetObject("trees", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] trees_h_c {
+            get {
+                object obj = ResourceManager.GetObject("trees_h_c", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
