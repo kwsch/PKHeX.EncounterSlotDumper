@@ -290,7 +290,7 @@ namespace PKHeX.EncounterSlotDumper
             for (int i = 0; i < rock.Count; i++)
             {
                 int o = ptr[rockID[i]] - baseOffset;
-                GetSlots2Headbutt(head, rock[i], data, ref o, 1);
+                GetSlots2Headbutt(rock, rock[i], data, ref o, 1);
             }
 
             return head.Concat(rock);

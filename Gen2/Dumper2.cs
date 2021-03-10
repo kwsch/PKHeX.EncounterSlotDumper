@@ -187,7 +187,7 @@ namespace PKHeX.EncounterSlotDumper
 
             var type = (byte) area.Type;
             bw.Write(type);
-            if ((SlotType)type == SlotType.Surf)
+            if ((SlotType)(type & 0xF) == SlotType.Surf)
             {
                 bw.Write(area.Rates[0]);
             }

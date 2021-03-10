@@ -67,12 +67,12 @@ namespace PKHeX.EncounterSlotDumper
 
         // always used as a modifier to another slot type
 
-        Special = 1 << 13,
+        Special = 1 << 6,
 
         /// <summary>
         /// Slot is encountered in a Swarm.
         /// </summary>
-        Swarm = 1 << 14,
+        Swarm = 1 << 7,
 
         /// <summary>
         /// Slot is encountered in the Safari Zone.
