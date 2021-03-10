@@ -25,6 +25,10 @@ namespace PKHeX.EncounterSlotDumper
             var fr = EncounterArea3.GetArray3(BinLinker.Unpack(f, "fr"));
             var lg = EncounterArea3.GetArray3(BinLinker.Unpack(l, "lg"));
 
+            // Remove unreleased Altering Cave tables
+            fr = fr.Where(z => z.Location != 183 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
+            lg = lg.Where(z => z.Location != 183 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
+
             var rd = ru.Concat(FishFeebas).OrderBy(z => z.Location).ThenBy(z => z.Type);
             var sd = sa.Concat(FishFeebas).OrderBy(z => z.Location).ThenBy(z => z.Type);
             var ed = em.Concat(FishFeebas).OrderBy(z => z.Location).ThenBy(z => z.Type);
