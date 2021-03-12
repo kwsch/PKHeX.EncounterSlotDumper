@@ -205,7 +205,7 @@ namespace PKHeX.EncounterSlotDumper
             var Slots = new List<EncounterSlot>();
 
             // 00-11 Normal trees
-            var area = new EncounterArea4HGSS { Location = location, Type = SlotType.Headbutt | SlotType.Special };
+            var area = new EncounterArea4HGSS {Location = location, Type = SlotType.Headbutt};
             for (int i = 0; i < 12; i++)
             {
                 int Species = BitConverter.ToInt16(data, 6 + (i * 4));
