@@ -151,11 +151,17 @@
   <data name="encounter_fr" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen3\encounter_fr.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="encounter_ge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_ge.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="encounter_gold" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen2\encounter_gold.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="encounter_gold_h" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen2\encounter_gold_h.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="encounter_gp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen7\encounter_gp.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="encounter_gsc_f" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen2\encounter_gsc_f.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

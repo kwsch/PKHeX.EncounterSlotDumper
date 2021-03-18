@@ -173,6 +173,16 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] encounter_ge {
+            get {
+                object obj = ResourceManager.GetObject("encounter_ge", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] encounter_gold {
             get {
                 object obj = ResourceManager.GetObject("encounter_gold", resourceCulture);
@@ -186,6 +196,16 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         internal static byte[] encounter_gold_h {
             get {
                 object obj = ResourceManager.GetObject("encounter_gold_h", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] encounter_gp {
+            get {
+                object obj = ResourceManager.GetObject("encounter_gp", resourceCulture);
                 return ((byte[])(obj));
             }
         }

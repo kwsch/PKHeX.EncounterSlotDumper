@@ -40,6 +40,10 @@ namespace PKHeX.EncounterSlotDumper
             Dumper7.DumpGen7();
 
             Console.WriteLine();
+            Console.WriteLine("Dumping Gen7b tables...");
+            Dumper7b.DumpGen7b();
+
+            Console.WriteLine();
             Console.WriteLine("Done!");
         }
     }
