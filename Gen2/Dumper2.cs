@@ -47,13 +47,12 @@ namespace PKHeX.EncounterSlotDumper
                 var sl = sha.ToList();
                 var cl = cha.ToList();
 
-                gl.RemoveAll(z => (z.Type & SlotType.Headbutt) != 0 && !Dumper2h.Trees.ContainsKey(z.Location));
-                sl.RemoveAll(z => (z.Type & SlotType.Headbutt) != 0 && !Dumper2h.Trees.ContainsKey(z.Location));
-                cl.RemoveAll(z => (z.Type & SlotType.Headbutt) != 0 && !Dumper2h.Trees.ContainsKey(z.Location));
+                gl.RemoveAll(z => (z.Type & ~SlotType.Special) == SlotType.Headbutt && !Dumper2h.Trees.ContainsKey(z.Location));
+                sl.RemoveAll(z => (z.Type & ~SlotType.Special) == SlotType.Headbutt && !Dumper2h.Trees.ContainsKey(z.Location));
+                cl.RemoveAll(z => (z.Type & ~SlotType.Special) == SlotType.Headbutt && !Dumper2h.Trees.ContainsKey(z.Location));
 
-                gha = gl.ToArray();
-                sha = sl.ToArray();
-                cha = cl.ToArray();
+                if (gha.Length != gl.Count || sha.Length != sl.Count || cha.Length != cl.Count)
+                    throw new Exception();
             }
 
             var gr = ga.Concat(gha).Concat(f)
