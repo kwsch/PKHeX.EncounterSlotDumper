@@ -295,7 +295,8 @@ namespace PKHeX.EncounterSlotDumper
             // Species id are not included in encounter tables but levels can be copied from the encounter raw data
             foreach (var swarm in swarms)
             {
-                var area = Areas.First(a => a.Location == swarm.Location && a.Type == swarm.Type);
+                var tables = Areas.Where(a => a.Location == swarm.Location && a.Type == swarm.Type).ToArray();
+                var area = tables[swarm.TableIndex];
                 var extra = new List<EncounterSlot4>();
 
                 var indexes = GetSwarmSlotIndexes(swarm.Type);
@@ -690,13 +691,17 @@ namespace PKHeX.EncounterSlotDumper
             public readonly short Location;
             public readonly int Species;
             public readonly SlotType Type;
+            public readonly int TableIndex;
 
-            public SwarmDef(short location, int species, SlotType type)
+            public SwarmDef(short location, int species, SlotType type, int index = 0)
             {
                 Location = location;
                 Species = species;
                 Type = type;
+                TableIndex = index;
             }
+
+            public override string ToString() => $"{Location}{(TableIndex == 0 ? "" : $"({TableIndex})")} - {(Species) Species}";
         }
 
         private static readonly SwarmDef[] SlotsHGSS_Swarm =
@@ -713,7 +718,7 @@ namespace PKHeX.EncounterSlotDumper
             new SwarmDef(193, 333, SlotType.Grass), // Swablu @ Route 45
             new SwarmDef(195, 132, SlotType.Grass), // Ditto @ Route 47
             new SwarmDef(216, 183, SlotType.Grass), // Marill @ Mt. Mortar
-            new SwarmDef(220, 206, SlotType.Grass), // Dunsparce @ Dark Cave
+            new SwarmDef(220, 206, SlotType.Grass, 1), // Dunsparce @ Dark Cave (Route 31 side; the r45 does not have Dunsparce swarm)
             new SwarmDef(224, 401, SlotType.Grass), // Kricketot @ Viridian Forest
 
             new SwarmDef(128, 340, SlotType.Old_Rod),   // Whiscash @ Violet City
