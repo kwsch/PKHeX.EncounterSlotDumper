@@ -57,6 +57,11 @@ namespace PKHeX.EncounterSlotDumper
             MarkHGSSEncounterTypeSlots(SlotsHG);
             MarkHGSSEncounterTypeSlots(SlotsSS);
 
+            // Remove inaccessible area slots
+            // Johto Route 45 surfing encounter. Unreachable Water tiles.
+            SlotsHG = SlotsHG.Where(z => z.Location != 193 || z.Type != SlotType.Surf).ToArray();
+            SlotsSS = SlotsSS.Where(z => z.Location != 193 || z.Type != SlotType.Surf).ToArray();
+
             Write(SlotsD, "encounter_d.pkl", "da");
             Write(SlotsP, "encounter_p.pkl", "pe");
             Write(SlotsPt, "encounter_pt.pkl", "pt");
