@@ -251,6 +251,9 @@ namespace PKHeX.EncounterSlotDumper
             58, // Floaroma Meadow
         };
 
+        private static readonly int[] MetLocationSolaceonRuins = { 53 };
+        private static readonly int[] MetLocationRuinsOfAlph = { 209 };
+
         private static void MarkEncounterTypeData(EncounterArea4[] D_Slots, EncounterArea4[] P_Slots, EncounterArea4[] Pt_Slots, EncounterArea4[] HG_Slots, EncounterArea4[] SS_Slots)
         {
             // Shellos & Gastrodon
@@ -260,6 +263,12 @@ namespace PKHeX.EncounterSlotDumper
             MarkG4AltFormSlots(P_Slots, 423, 1, Gastrodon_EastSeaLocation_DP);
             MarkG4AltFormSlots(Pt_Slots, 422, 1, Shellos_EastSeaLocation_Pt);
             MarkG4AltFormSlots(Pt_Slots, 423, 1, Gastrodon_EastSeaLocation_Pt);
+
+            MarkG4AltFormSlots( D_Slots, 201, 31, MetLocationSolaceonRuins);
+            MarkG4AltFormSlots( P_Slots, 201, 31, MetLocationSolaceonRuins);
+            MarkG4AltFormSlots(Pt_Slots, 201, 31, MetLocationSolaceonRuins);
+            MarkG4AltFormSlots(HG_Slots, 201, 31, MetLocationRuinsOfAlph);
+            MarkG4AltFormSlots(SS_Slots, 201, 31, MetLocationRuinsOfAlph);
 
             const int Route209 = 24;
             const int StarkMountain = 84;

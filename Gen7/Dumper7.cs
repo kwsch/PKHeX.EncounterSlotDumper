@@ -42,11 +42,28 @@ namespace PKHeX.EncounterSlotDumper
             var SlotsUS = ArrayUtil.ConcatAll(REG_US, SOS_US, p_us);
             var SlotsUM = ArrayUtil.ConcatAll(REG_UM, SOS_UM, p_um);
 
+            UpdateMiniorForm(SlotsSN, SlotsMN, SlotsUS, SlotsUM);
+
             Write(SlotsSN, "encounter_sn.pkl", "sm");
             Write(SlotsMN, "encounter_mn.pkl", "sm");
 
             Write(SlotsUS, "encounter_us.pkl", "uu");
             Write(SlotsUM, "encounter_um.pkl", "uu");
+        }
+
+        private static void UpdateMiniorForm(params EncounterArea7[][] gameTables)
+        {
+            foreach (var gameTable in gameTables)
+            {
+                foreach (var table in gameTable)
+                {
+                    foreach (var slot in table.Slots)
+                    {
+                        if (slot.Species == (int)Species.Minior)
+                            slot.Form = 31; // "Random", template data sets 0, and game checks if species is minior. Let's be clean with our data.
+                    }
+                }
+            }
         }
 
         public static void Write(IEnumerable<EncounterArea7> area, string name, string ident = "g6")
