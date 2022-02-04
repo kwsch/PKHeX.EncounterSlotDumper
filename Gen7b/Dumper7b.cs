@@ -68,16 +68,30 @@ namespace PKHeX.EncounterSlotDumper
                 var species = Rare.Where(z => z.Locations.Contains((byte)loc)).Select(z => z.Species).ToArray();
                 if (species.Length == 0)
                     continue;
+
                 var slots = table.Slots;
-                var first = slots[0];
                 var extra = species
-                    .Select(z => new EncounterSlot7b(z, (z is 006 or >= 144) ? 03 : first.LevelMin, (z is 006 or >= 144) ? 56 : first.LevelMax)).ToArray();
+                    .Select(z => new EncounterSlot7b(z, GetMinLevel(z, slots, loc), GetMaxLevel(z, slots, loc))).ToArray();
 
                 int count = slots.Length;
                 Array.Resize(ref slots, count + extra.Length);
                 extra.CopyTo(slots, count);
                 table.Slots = slots;
             }
+        }
+
+        private static int GetMaxLevel(int z, EncounterSlot[] slots, int loc)
+        {
+            if (loc == 22 && z == 131) // Route 20 Lapras
+                return 44; // Slot tables were already merged. Just merge the resulting Lapras'es.
+            return (z is 006 or >= 144) ? 56 : slots[0].LevelMax;
+        }
+
+        private static int GetMinLevel(int z, EncounterSlot[] slots, int loc)
+        {
+            if (loc == 22 && z == 131) // Route 20 Lapras
+                return 37; // Slot tables were already merged. Just merge the resulting Lapras'es.
+            return (z is 006 or >= 144) ? 03 : slots[0].LevelMin;
         }
     }
     public sealed class EncounterArea7b : EncounterArea
