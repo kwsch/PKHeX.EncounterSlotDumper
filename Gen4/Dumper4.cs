@@ -32,9 +32,9 @@ namespace PKHeX.EncounterSlotDumper
             var HG_Headbutt_Slots = EncounterArea4HGSS.GetArray4HGSS_Headbutt(BinLinker.Unpack(hb_hg, "hg"));
             var SS_Headbutt_Slots = EncounterArea4HGSS.GetArray4HGSS_Headbutt(BinLinker.Unpack(hb_ss, "ss"));
 
-            var D_HoneyTrees_Slots = SlotsD_HoneyTree.Clone(HoneyTreesLocation);
-            var P_HoneyTrees_Slots = SlotsP_HoneyTree.Clone(HoneyTreesLocation);
-            var Pt_HoneyTrees_Slots = SlotsPt_HoneyTree.Clone(HoneyTreesLocation);
+            var D_HoneyTrees_Slots = SlotsD_HoneyTree.Split(HoneyTreesLocation);
+            var P_HoneyTrees_Slots = SlotsP_HoneyTree.Split(HoneyTreesLocation);
+            var Pt_HoneyTrees_Slots = SlotsPt_HoneyTree.Split(HoneyTreesLocation);
 
             MarkG4SwarmSlots(HG_Slots, SlotsHG_Swarm);
             MarkG4SwarmSlots(SS_Slots, SlotsSS_Swarm);

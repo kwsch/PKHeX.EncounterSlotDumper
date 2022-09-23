@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public sealed class EncounterArea1 : EncounterArea
+    public sealed record EncounterArea1 : EncounterArea
     {
         /// <summary>
         /// Wild Encounter activity rate

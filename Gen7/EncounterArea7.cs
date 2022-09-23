@@ -1,6 +1,6 @@
 ﻿namespace PKHeX.EncounterSlotDumper
 {
-    public sealed class EncounterArea7 : EncounterArea32
+    public sealed record EncounterArea7 : EncounterArea32
     {
     }
 }

@@ -94,7 +94,7 @@ namespace PKHeX.EncounterSlotDumper
             return (z is 006 or >= 144) ? 03 : slots[0].LevelMin;
         }
     }
-    public sealed class EncounterArea7b : EncounterArea
+    public sealed record EncounterArea7b : EncounterArea
     {
         public static EncounterArea7b[] GetAreas(byte[][] input)
         {

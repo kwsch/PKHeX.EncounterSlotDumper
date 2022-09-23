@@ -3,7 +3,7 @@ using System;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public class EncounterArea
+    public record EncounterArea
     {
         public short Location;
         public SlotType Type { get; set; } = SlotType.Any;

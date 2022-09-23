@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public abstract class EncounterArea4 : EncounterArea
+    public abstract record EncounterArea4 : EncounterArea
     {
         public int Rate { get; set; }
         public EncounterType TypeEncounter { get; set; } = EncounterType.None;

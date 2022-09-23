@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public sealed class EncounterArea2 : EncounterArea
+    public sealed record EncounterArea2 : EncounterArea
     {
         public byte[] Rates { get; set; }
 

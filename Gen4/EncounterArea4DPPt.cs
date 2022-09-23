@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public sealed class EncounterArea4DPPt : EncounterArea4
+    public sealed record EncounterArea4DPPt : EncounterArea4
     {
         /// <summary>
         /// Gets the encounter areas with <see cref="EncounterSlot"/> information from Generation 4 Diamond, Pearl and Platinum data.
@@ -186,13 +186,11 @@ namespace PKHeX.EncounterSlotDumper
             }
         }
 
-        private EncounterArea4DPPt Clone(int location) => new EncounterArea4DPPt { Slots = Slots, Location = (short)location };
-
-        public EncounterArea4DPPt[] Clone(int[] locations)
+        public EncounterArea4DPPt[] Split(int[] locations)
         {
             var Areas = new EncounterArea4DPPt[locations.Length];
             for (int i = 0; i < locations.Length; i++)
-                Areas[i] = Clone(locations[i]);
+                Areas[i] = this with { Location = (short)locations[i] };
             return Areas;
         }
     }

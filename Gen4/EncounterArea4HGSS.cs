@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public sealed class EncounterArea4HGSS : EncounterArea4
+    public sealed record EncounterArea4HGSS : EncounterArea4
     {
         /// <summary>
         /// Gets the encounter areas with <see cref="EncounterSlot"/> information from Generation 4 Heart Gold and Soul Silver data.

@@ -2,7 +2,7 @@
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public abstract class EncounterArea32 : EncounterArea
+    public abstract record EncounterArea32 : EncounterArea
     {
         /// <summary>
         /// Gets an array of areas from an array of raw area data

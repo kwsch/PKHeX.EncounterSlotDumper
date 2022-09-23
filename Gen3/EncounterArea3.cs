@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PKHeX.EncounterSlotDumper
 {
-    public sealed class EncounterArea3 : EncounterArea
+    public sealed record EncounterArea3 : EncounterArea
     {
         public int Rate { get; set; }
 
