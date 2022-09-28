@@ -26,6 +26,7 @@ namespace PKHeX.EncounterSlotDumper
             Console.WriteLine();
             Console.WriteLine("Dumping Gen4 tables...");
             Dumper4.DumpGen4();
+            Dumper4Walker.DumpGen4();
 
             Console.WriteLine();
             Console.WriteLine("Dumping Gen5 tables...");

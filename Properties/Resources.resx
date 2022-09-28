@@ -265,4 +265,7 @@
   <data name="trees_h_c" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen2\trees_h_c.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="walker_enc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen4\walker_enc.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
