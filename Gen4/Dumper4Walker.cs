@@ -41,7 +41,6 @@ namespace PKHeX.EncounterSlotDumper
             const int footerStart = 4 + (Mons * WalkerEntry.SIZE) + (Drops * DropEntry.SIZE);
             Footer = data.Slice(footerStart, 4).ToArray();
             UnlockWatts = ReadUInt32LittleEndian(data[(footerStart + 4)..]);
-
         }
 
         public static WalkerSet[] ReadAll(ReadOnlySpan<byte> bytes)
@@ -149,7 +148,7 @@ namespace PKHeX.EncounterSlotDumper
             //bw.Write(Item);
             //bw.Write(U5);
             //bw.Write(U6);
-            bw.Write(Gender);
+            bw.Write((byte)(PersonalTable.HGSS[Species].Genderless ? 2 : Gender)); // because raw data doesn't specify 2 consistently!
             bw.Write(Move1);
             bw.Write(Move2);
             bw.Write(Move3);
