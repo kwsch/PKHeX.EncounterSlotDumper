@@ -40,6 +40,12 @@ namespace PKHeX.EncounterSlotDumper
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         };
 
+        private static readonly (byte Group, byte LocationID)[] FishSwarm =
+        {
+            (5, 8), // Qwilfish
+            (6, 39), // Remoraid
+        };
+
         /// <summary>
         /// Gets the encounter areas with <see cref="EncounterSlot2"/> information from Generation 2 Grass/Water data.
         /// </summary>
@@ -71,6 +77,9 @@ namespace PKHeX.EncounterSlotDumper
             // Some maps have two tables. Fortunately, there's only two. Add the second table.
             AddTableForLocation(1, 27); // Olivine City (0: Harbor, 1: City)
             AddTableForLocation(3, 46); // Silver Cave (2: Inside, 3: Outside)
+
+            foreach (var (group, locationId) in FishSwarm)
+                AddTableForLocation(group, locationId);
 
             return areas.ToArray();
         }

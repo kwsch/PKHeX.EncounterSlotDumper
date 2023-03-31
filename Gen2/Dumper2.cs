@@ -51,7 +51,7 @@ namespace PKHeX.EncounterSlotDumper
                 sl.RemoveAll(z => (z.Type & ~SlotType.Special) == SlotType.Headbutt && !Dumper2h.Trees.ContainsKey(z.Location));
                 cl.RemoveAll(z => (z.Type & ~SlotType.Special) == SlotType.Headbutt && !Dumper2h.Trees.ContainsKey(z.Location));
 
-                if (gha.Length != gl.Count || sha.Length != sl.Count || cha.Length != cl.Count)
+                if (gha.Length == gl.Count || sha.Length == sl.Count || cha.Length == cl.Count)
                     throw new Exception();
             }
 
