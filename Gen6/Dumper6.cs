@@ -46,6 +46,26 @@ namespace PKHeX.EncounterSlotDumper
                 area.Slots = area.Slots.Take(area.Slots.Length - horde.Length).ToArray();
             }
 
+            // Pressure can cause different forms to appear with max level.
+            foreach (var area in Areas)
+            {
+                bool hasFlabebe = area.Slots.Any(z => z.Species == (int)Species.Flabébé);
+                if (!hasFlabebe)
+                    continue;
+                var flabebe = area.Slots.Where(z => z.Species == (int)Species.Flabébé).ToArray();
+                var max = flabebe.Max(z => z.LevelMax);
+                var forms = flabebe.Select(z => z.Form).Distinct().ToArray();
+                // Add a pressure proc slot to the area slots.
+                foreach (var form in forms)
+                {
+                    var slot = flabebe.First(z => z.Form == form);
+                    if (slot.LevelMax == max)
+                        continue;
+                    var newslot = new EncounterSlot6 { Species = slot.Species, Form = slot.Form, LevelMin = max, LevelMax = max };
+                    area.Slots = area.Slots.Append(newslot).ToArray();
+                }
+            }
+
             Areas = ArrayUtil.ConcatAll(Areas, extra.ToArray());
         }
 

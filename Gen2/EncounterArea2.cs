@@ -74,7 +74,8 @@ namespace PKHeX.EncounterSlotDumper
                 }
             }
 
-            // Some maps have two tables. Fortunately, there's only two. Add the second table.
+            // Some maps have two tables. Fortunately, there's only a few. Add the second table.
+            AddTableForLocation(0, 10); // Union Cave (2: Inside, 0: B2F Shore)
             AddTableForLocation(1, 27); // Olivine City (0: Harbor, 1: City)
             AddTableForLocation(3, 46); // Silver Cave (2: Inside, 3: Outside)
 

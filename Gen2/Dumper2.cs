@@ -70,7 +70,8 @@ namespace PKHeX.EncounterSlotDumper
             Write(cr, "encounter_crystal.pkl");
         }
 
-        private static readonly EncounterArea2 EncounterBCC_GSC = new EncounterArea2 {
+        private static readonly EncounterArea2 EncounterBCC_GSC = new()
+        {
             Location = 19,
             Type = SlotType.BugContest,
             Rates = new byte[] {20}, // 40 in tall grass
@@ -86,13 +87,13 @@ namespace PKHeX.EncounterSlotDumper
                 new EncounterSlot2(046, 10, 17, 07), // Paras
                 new EncounterSlot2(123, 13, 14, 08), // Scyther
                 new EncounterSlot2(127, 13, 14, 09), // Pinsir
-            }
+            },
         };
 
         public static void Write(IEnumerable<EncounterArea2> areas, string name, string ident = "g2")
         {
             var serialized = areas.Select(Write).SelectMany(z => z).ToArray();
-            List<byte[]> unique = new List<byte[]>();
+            var unique = new List<byte[]>();
             foreach (var a in serialized)
             {
                 if (unique.Any(z => z.SequenceEqual(a)))
@@ -134,7 +135,7 @@ namespace PKHeX.EncounterSlotDumper
                     yield return ms.ToArray();
                 }
             }
-            else if (area.Type == SlotType.Old_Rod || area.Type == SlotType.Good_Rod || area.Type == SlotType.Super_Rod)
+            else if (area.Type is SlotType.Old_Rod or SlotType.Good_Rod or SlotType.Super_Rod)
             {
                 if (area.Slots.Length == area.Rates.Length)
                 {
