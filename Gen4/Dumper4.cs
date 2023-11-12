@@ -478,7 +478,9 @@ namespace PKHeX.EncounterSlotDumper
 
         private static EncounterType GetHeadbuttEncounterType(int Location)
         {
-            if (Location == 195 || Location == 196) // Route 47/48
+            if (Location == 195) // Route 47 -- one tree accessible via Water tile
+                return EncounterType.DialgaPalkia | EncounterType.TallGrass | EncounterType.Surfing_Fishing;
+            if (Location == 196) // Route 48
                 return EncounterType.DialgaPalkia | EncounterType.TallGrass;
 
             // Routes with trees adjacent to water tiles
@@ -644,6 +646,7 @@ namespace PKHeX.EncounterSlotDumper
             190, // Route 42
             191, // Route 43
             192, // Route 44
+            195, // Route 47 -- One tree at the very top of the waterfall.
             214, // Ilex Forest
         };
 
