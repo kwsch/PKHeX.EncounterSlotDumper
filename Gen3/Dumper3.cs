@@ -28,6 +28,7 @@ namespace PKHeX.EncounterSlotDumper
             // Remove unreleased Altering Cave tables
             fr = fr.Where(z => z.Location != 183 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
             lg = lg.Where(z => z.Location != 183 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
+            em = em.Where(z => z.Location != 210 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
 
             var rd = ru.Concat(FishFeebas).OrderBy(z => z.Location).ThenBy(z => z.Type);
             var sd = sa.Concat(FishFeebas).OrderBy(z => z.Location).ThenBy(z => z.Type);
