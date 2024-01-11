@@ -125,12 +125,10 @@ namespace PKHeX.EncounterSlotDumper
                     var trophySlots = new List<EncounterSlot4>();
                     foreach (var s in species)
                     {
-                        var slot = (EncounterSlot4)regular[0][0].Clone();
-                        slot.Species = s;
+                        var slot = regular[0][0] with { Species = s };
                         trophySlots.Add(slot);
 
-                        slot = (EncounterSlot4)regular[0][1].Clone();
-                        slot.Species = s;
+                        slot = regular[0][1] with { Species = s };
                         trophySlots.Add(slot);
                     }
                     Slots.AddRange(trophySlots);

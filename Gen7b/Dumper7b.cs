@@ -147,7 +147,7 @@ namespace PKHeX.EncounterSlotDumper
         }
     }
 
-    public sealed class EncounterSlot7b : EncounterSlot
+    public sealed record EncounterSlot7b : EncounterSlot
     {
         public EncounterSlot7b(int species, int min, int max)
         {

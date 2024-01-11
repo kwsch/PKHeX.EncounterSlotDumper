@@ -42,10 +42,14 @@ namespace PKHeX.EncounterSlotDumper
                     Species = species,
                     SlotNumber = i,
                 };
-                slots[numslots + i] = (EncounterSlot4)slots[i].Clone();
-                slots[numslots + i].Species = BitConverter.ToUInt16(data, ofs + (numslots * 3) + (i * 2));
-                slots[(numslots * 2) + i] = (EncounterSlot4)slots[i].Clone();
-                slots[(numslots * 2) + i].Species = BitConverter.ToUInt16(data, ofs + (numslots * 5) + (i * 2));
+                slots[numslots + i] = slots[i] with
+                {
+                    Species = BitConverter.ToUInt16(data, ofs + (numslots * 3) + (i * 2)),
+                };
+                slots[(numslots * 2) + i] = slots[i] with
+                {
+                    Species = BitConverter.ToUInt16(data, ofs + (numslots * 5) + (i * 2)),
+                };
             }
 
             return slots;
@@ -216,6 +220,7 @@ namespace PKHeX.EncounterSlotDumper
                     Species = Species,
                     LevelMin = data[8 + (i * 4)],
                     LevelMax = data[9 + (i * 4)],
+                    SlotNumber = i % 6,
                 });
             }
 
@@ -238,6 +243,7 @@ namespace PKHeX.EncounterSlotDumper
                     Species = Species,
                     LevelMin = data[8 + (i * 4)],
                     LevelMax = data[9 + (i * 4)],
+                    SlotNumber = i % 6,
                 });
             }
 
@@ -246,6 +252,21 @@ namespace PKHeX.EncounterSlotDumper
                 area.Slots = Slots.ToArray();
                 yield return area;
             }
+        }
+
+        public bool ContainsSpeciesForm(EncounterSlot4 slot)
+        {
+            foreach (var self in Slots)
+            {
+                if (self.Species != slot.Species)
+                    continue;
+                if (self.Form != slot.Form)
+                    continue;
+                if (self.LevelMin != slot.LevelMin)
+                    continue;
+                return true;
+            }
+            return false;
         }
     }
 }

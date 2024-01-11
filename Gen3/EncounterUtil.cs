@@ -36,7 +36,7 @@ namespace PKHeX.EncounterSlotDumper
                     if (permuted.Any(z => z.SlotNumber == slot.SlotNumber && z.IsMatchStatic(i, s.Count) && z.Species == slot.Species))
                         continue; // same values, previously permuted
 
-                    s[i] = slot = (T)slot.Clone();
+                    s[i] = slot = slot with { };
                     permuted.Add(slot);
                 }
                 slot.StaticIndex = i;
@@ -52,7 +52,7 @@ namespace PKHeX.EncounterSlotDumper
                     if (permuted.Any(z => z.SlotNumber == slot.SlotNumber && z.IsMatchMagnet(i, m.Count) && z.Species == slot.Species))
                         continue; // same values, previously permuted
 
-                    m[i] = slot = (T)slot.Clone();
+                    m[i] = slot = slot with { };
                     permuted.Add(slot);
                 }
                 slot.MagnetPullIndex = i;

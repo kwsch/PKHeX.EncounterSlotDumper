@@ -225,7 +225,7 @@ namespace PKHeX.EncounterSlotDumper
 
                     Array.Resize(ref slots, slots.Length + 1);
                     Array.Copy(slots, i, slots, i + 1, slots.Length - i - 1); // shift slots down
-                    slots[i + 1] = slot.Clone(); // differentiate copied slot
+                    slots[i + 1] = slot with { }; // differentiate copied slot
 
                     int index = slot.LevelMin * 2;
                     for (int j = 0; j < 2; j++) // load special slot info

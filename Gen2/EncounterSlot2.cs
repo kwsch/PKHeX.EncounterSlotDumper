@@ -6,7 +6,7 @@
     /// <remarks>
     /// Contains Time data which is present in Crystal origin data.
     /// </remarks>
-    public sealed class EncounterSlot2 : EncounterSlot
+    public sealed record EncounterSlot2 : EncounterSlot
     {
         public int SlotNumber { get; set; }
 

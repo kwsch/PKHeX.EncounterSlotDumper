@@ -521,6 +521,16 @@ namespace PKHeX.EncounterSlotDumper.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] safari_a230 {
+            get {
+                object obj = ResourceManager.GetObject("safari_a230", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (None)
         ///New Bark Town
         ///Route 29

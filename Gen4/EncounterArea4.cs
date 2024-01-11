@@ -35,9 +35,7 @@ namespace PKHeX.EncounterSlotDumper
                 if (species <= 0 || baseSlot.Species == species) // Empty or duplicate
                     continue;
 
-                var slot = (EncounterSlot4)baseSlot.Clone();
-                slot.Species = species;
-                slot.SlotNumber = i;
+                var slot = (EncounterSlot4)baseSlot with { Species = species, SlotNumber = i };
                 slots.Add(slot);
             }
             return slots;

@@ -3,7 +3,7 @@
     /// <summary>
     /// Generation 1 Wild Encounter Slot data
     /// </summary>
-    public sealed class EncounterSlot1 : EncounterSlot
+    public sealed record EncounterSlot1 : EncounterSlot
     {
         public int SlotNumber { get; set; }
 
