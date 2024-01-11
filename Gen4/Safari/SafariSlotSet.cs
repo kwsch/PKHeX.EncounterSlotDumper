@@ -16,11 +16,11 @@ public sealed class SafariSlotSet
     {
         Type = type;
 
-        GetSlots(ref data, Day);
         GetSlots(ref data, Morning);
+        GetSlots(ref data, Day);
         GetSlots(ref data, Night);
-        GetSlots(ref data, ExtraDay     = new EncounterSlot4[extraCount]);
         GetSlots(ref data, ExtraMorning = new EncounterSlot4[extraCount]);
+        GetSlots(ref data, ExtraDay     = new EncounterSlot4[extraCount]);
         GetSlots(ref data, ExtraNight   = new EncounterSlot4[extraCount]);
         GetBlocks(ref data, ExtraBlocks = new BlockRequirement[extraCount]);
     }

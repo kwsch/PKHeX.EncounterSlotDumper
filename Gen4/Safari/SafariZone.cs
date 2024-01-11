@@ -19,10 +19,10 @@ public sealed class SafariZone
         const int sizeSurf = 0xA8; // 3 sets of 10 slots, 3 extra slots, 3 blocksets
         const int sizeFish = 0x98; // 3 sets of 10 slots, 2 extra slots, 2 blocksets
         var grass = data[..sizeGrass];
-        var surf = data[sizeGrass..(sizeGrass + sizeSurf)];
-        var old = data[(sizeGrass + sizeSurf)..];
-        var good = data[(sizeGrass + sizeSurf + sizeFish)..];
-        var super = data[(sizeGrass + sizeSurf + sizeFish)..];
+        var surf = data.Slice(sizeGrass, sizeSurf);
+        var old = data.Slice(sizeGrass + sizeSurf, sizeFish);
+        var good = data.Slice(sizeGrass + sizeSurf + sizeFish, sizeFish);
+        var super = data.Slice(sizeGrass + sizeSurf + sizeFish + sizeFish, sizeFish);
         Grass = new(grass, SlotType.Grass_Safari, Header.Grass);
         Surf = new(surf, SlotType.Surf_Safari, Header.Surf);
         Old = new(old, SlotType.Old_Rod_Safari, Header.Old);

@@ -9,7 +9,7 @@ namespace PKHeX.EncounterSlotDumper;
 public static class Dumper4Safari
 {
     public static readonly List<string> Parse = [];
-    public static bool ExportParse { get; set; }
+    public static bool ExportParse { get; set; } = true;
 
     private static ReadOnlySpan<int> LocationsWithWater => [1, 4, 5, 7, 8];
     private const byte SafariZoneMetLocation = 202;
