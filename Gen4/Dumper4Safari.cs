@@ -11,7 +11,6 @@ public static class Dumper4Safari
     public static readonly List<string> Parse = [];
     public static bool ExportParse { get; set; } = true;
 
-    private static ReadOnlySpan<int> LocationsWithWater => [1, 4, 5, 7, 8];
     private const byte SafariZoneMetLocation = 202;
 
     private enum SafariBlockType
@@ -24,6 +23,32 @@ public static class Dumper4Safari
         COUNT = 5,
     }
 
+    private enum SafariSubZone
+    {
+        Plains = 0,
+        Meadow = 1,
+        Savannah = 2,
+        Peak = 3,
+        Rocky = 4,
+        Wetland = 5,
+        Forest = 6,
+        Swamp = 7,
+        Marshland = 8,
+        Wasteland = 9,
+        Mountain = 10,
+        Desert = 11,
+    }
+
+    private static bool IsWater(SafariSubZone zone) => zone switch
+    {
+        SafariSubZone.Meadow => true,
+        SafariSubZone.Rocky => true,
+        SafariSubZone.Wetland => true,
+        SafariSubZone.Swamp => true,
+        SafariSubZone.Marshland => true,
+        _ => false,
+    };
+
     public static EncounterArea4HGSS[] GetSafariAreaSets()
     {
         var resource = Resources.safari_a230;
@@ -35,12 +60,12 @@ public static class Dumper4Safari
         // subzone, and by type
         var computedTables = new List<EncounterArea4HGSS>();
         for (int i = 0; i < zones.Length; i++)
-            AddToTable(computedTables, i, zones[i]);
+            AddToTable(computedTables, (SafariSubZone)i, zones[i]);
 
         return [.. computedTables];
     }
 
-    private static void AddToTable(List<EncounterArea4HGSS> result, int i, SafariZone zone)
+    private static void AddToTable(List<EncounterArea4HGSS> result, SafariSubZone i, SafariZone zone)
     {
         AddToTable(result, i, zone.Grass);
         AddToTable(result, i, zone.Surf);
@@ -49,10 +74,10 @@ public static class Dumper4Safari
         AddToTable(result, i, zone.Super);
     }
 
-    private static void AddToTable(List<EncounterArea4HGSS> result, int index, SafariSlotSet set)
+    private static void AddToTable(List<EncounterArea4HGSS> result, SafariSubZone index, SafariSlotSet set)
     {
         var type = set.Type;
-        bool hasWater = LocationsWithWater.Contains(index);
+        bool hasWater = IsWater(index);
         if (!hasWater && type != SlotType.Grass_Safari)
             return;
 
@@ -83,7 +108,7 @@ public static class Dumper4Safari
         }
     }
 
-    private static EncounterArea4HGSS GetAreaWrapper(IEnumerable<SafariSlot> deduplicate, SlotType type, int index)
+    private static EncounterArea4HGSS GetAreaWrapper(IEnumerable<SafariSlot> deduplicate, SlotType type, SafariSubZone index)
     {
         var condensed = deduplicate
             .OrderBy(z => z.Species).ThenBy(z => z.Level)
@@ -97,7 +122,7 @@ public static class Dumper4Safari
             Location = SafariZoneMetLocation,
             Type = type,
             Slots = condensed,
-            Rate = index,
+            Rate = (byte)index,
         };
     }
 
