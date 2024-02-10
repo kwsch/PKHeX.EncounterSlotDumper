@@ -753,10 +753,13 @@ public static class Dumper4
 
 public static class Encounters4Extra
 {
+    private const byte RateBCC = 25; // Assumed same as the underlying area (National Park, grass)
+
     private static readonly EncounterArea4HGSS BCC_PreNational = new()
     {
         Location = 207, // National Park Catching Contest
         Type = BugContest,
+        Rate = RateBCC,
         Slots =
         [
             new EncounterSlot4 { Species = 010, LevelMin = 07, LevelMax = 18, SlotNumber = 0 }, // Caterpie
@@ -768,7 +771,7 @@ public static class Encounters4Extra
             new EncounterSlot4 { Species = 048, LevelMin = 10, LevelMax = 16, SlotNumber = 6 }, // Venonat
             new EncounterSlot4 { Species = 046, LevelMin = 10, LevelMax = 17, SlotNumber = 7 }, // Paras
             new EncounterSlot4 { Species = 123, LevelMin = 13, LevelMax = 14, SlotNumber = 8 }, // Scyther
-            new EncounterSlot4 { Species = 127, LevelMin = 13, LevelMax = 14, SlotNumber = 9 } // Pinsir
+            new EncounterSlot4 { Species = 127, LevelMin = 13, LevelMax = 14, SlotNumber = 9 }, // Pinsir
         ]
     };
 
@@ -776,6 +779,7 @@ public static class Encounters4Extra
     {
         Location = 207, // National Park Catching Contest
         Type = BugContest,
+        Rate = RateBCC,
         Slots =
         [
             new EncounterSlot4 { Species = 010, LevelMin = 24, LevelMax = 36, SlotNumber = 0 }, // Caterpie
@@ -787,7 +791,7 @@ public static class Encounters4Extra
             new EncounterSlot4 { Species = 048, LevelMin = 25, LevelMax = 32, SlotNumber = 6 }, // Venonat
             new EncounterSlot4 { Species = 046, LevelMin = 27, LevelMax = 34, SlotNumber = 7 }, // Paras
             new EncounterSlot4 { Species = 123, LevelMin = 27, LevelMax = 28, SlotNumber = 8 }, // Scyther
-            new EncounterSlot4 { Species = 127, LevelMin = 27, LevelMax = 28, SlotNumber = 9 } // Pinsir
+            new EncounterSlot4 { Species = 127, LevelMin = 27, LevelMax = 28, SlotNumber = 9 }, // Pinsir
         ]
     };
 
@@ -795,6 +799,7 @@ public static class Encounters4Extra
     {
         Location = 207, // National Park Catching Contest
         Type = BugContest,
+        Rate = RateBCC,
         Slots =
         [
             new EncounterSlot4 { Species = 265, LevelMin = 24, LevelMax = 36, SlotNumber = 0 }, // Wurmple
@@ -806,7 +811,7 @@ public static class Encounters4Extra
             new EncounterSlot4 { Species = 269, LevelMin = 25, LevelMax = 32, SlotNumber = 6 }, // Dustox (Thursday)
             new EncounterSlot4 { Species = 415, LevelMin = 27, LevelMax = 34, SlotNumber = 7 }, // Combee
             new EncounterSlot4 { Species = 123, LevelMin = 27, LevelMax = 28, SlotNumber = 8 }, // Scyther
-            new EncounterSlot4 { Species = 127, LevelMin = 27, LevelMax = 28, SlotNumber = 9 } // Pinsir
+            new EncounterSlot4 { Species = 127, LevelMin = 27, LevelMax = 28, SlotNumber = 9 }, // Pinsir
         ]
     };
 
@@ -814,6 +819,7 @@ public static class Encounters4Extra
     {
         Location = 207, // National Park Catching Contest
         Type = BugContest,
+        Rate = RateBCC,
         Slots =
         [
             new EncounterSlot4 { Species = 265, LevelMin = 24, LevelMax = 36, SlotNumber = 0 }, // Wurmple
@@ -825,7 +831,7 @@ public static class Encounters4Extra
             new EncounterSlot4 { Species = 267, LevelMin = 25, LevelMax = 32, SlotNumber = 6 }, // Beautifly (Saturday)
             new EncounterSlot4 { Species = 415, LevelMin = 27, LevelMax = 34, SlotNumber = 7 }, // Combee
             new EncounterSlot4 { Species = 123, LevelMin = 27, LevelMax = 28, SlotNumber = 8 }, // Scyther
-            new EncounterSlot4 { Species = 127, LevelMin = 27, LevelMax = 28, SlotNumber = 9 } // Pinsir
+            new EncounterSlot4 { Species = 127, LevelMin = 27, LevelMax = 28, SlotNumber = 9 }, // Pinsir
         ]
     };
 
