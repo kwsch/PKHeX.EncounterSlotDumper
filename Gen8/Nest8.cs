@@ -1,6 +1,3 @@
-﻿using System.IO;
-using System.Linq;
-
 namespace PKHeX.EncounterSlotDumper;
 
 internal static class Nest8
@@ -17,7 +14,7 @@ internal static class Nest8
     internal const int MaxLair = 244;
 
     internal static readonly EncounterStatic8N[] Nest_Common =
-    {
+    [
         new(000,0,0,1) { Species = 236, Ability = A3 }, // Tyrogue
         new(000,0,0,1) { Species = 066, Ability = A3 }, // Machop
         new(000,0,1,1) { Species = 532, Ability = A3 }, // Timburr
@@ -1898,11 +1895,11 @@ internal static class Nest8
         new(196,4,4,5) { Species = 880, Ability = A2 }, // Dracozolt
         new(196,4,4,5) { Species = 882, Ability = A2 }, // Dracovish
         new(196,3,4,5) { Species = 881, Ability = A2 }, // Arctozolt
-        new(196,3,4,5) { Species = 883, Ability = A2 }, // Arctovish
-    };
+        new(196,3,4,5) { Species = 883, Ability = A2 } // Arctovish
+    ];
 
     internal static readonly EncounterStatic8N[] Nest_SW =
-    {
+    [
         new(000,0,1,1) { Species = 559, Ability = A3 }, // Scraggy
         new(000,2,3,3) { Species = 106, Ability = A3 }, // Hitmonlee
         new(000,2,4,4) { Species = 107, Ability = A3 }, // Hitmonchan
@@ -2249,11 +2246,11 @@ internal static class Nest8
         new(196,2,2,2) { Species = 139, Ability = A2 }, // Omastar
         new(196,2,2,3) { Species = 881, Ability = A2 }, // Arctozolt
         new(196,2,3,4) { Species = 880, Ability = A2 }, // Dracozolt
-        new(196,3,3,4) { Species = 882, Ability = A2 }, // Dracovish
-    };
+        new(196,3,3,4) { Species = 882, Ability = A2 } // Dracovish
+    ];
 
     internal static readonly EncounterStatic8N[] Nest_SH =
-    {
+    [
         new(000,0,1,1) { Species = 453, Ability = A3 }, // Croagunk
         new(000,2,3,3) { Species = 107, Ability = A3 }, // Hitmonchan
         new(000,2,4,4) { Species = 106, Ability = A3 }, // Hitmonlee
@@ -2595,6 +2592,6 @@ internal static class Nest8
         new(196,2,2,2) { Species = 141, Ability = A2 }, // Kabutops
         new(196,2,2,3) { Species = 883, Ability = A2 }, // Arctovish
         new(196,2,3,4) { Species = 882, Ability = A2 }, // Dracovish
-        new(196,3,3,4) { Species = 880, Ability = A2 }, // Dracozolt
-    };
+        new(196,3,3,4) { Species = 880, Ability = A2 } // Dracozolt
+    ];
 }

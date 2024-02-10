@@ -1,17 +1,21 @@
-﻿namespace PKHeX.EncounterSlotDumper
+namespace PKHeX.EncounterSlotDumper;
+
+public sealed record EncounterSlot4 : EncounterSlot34, IMagnetStatic, INumberedSlot
 {
-    public sealed record EncounterSlot4 : EncounterSlot, IMagnetStatic, INumberedSlot
+    public override required ushort Species { get; init; }
+    public byte Form { get; set; }
+    public byte LevelMin { get; set; }
+    public byte LevelMax { get; set; }
+
+    public byte StaticIndex { get; set; }
+    public byte MagnetPullIndex { get; set; }
+    public byte StaticCount { get; set; }
+    public byte MagnetPullCount { get; set; }
+
+    public byte SlotNumber { get; set; }
+
+    public byte Level
     {
-        public int StaticIndex { get; set; }
-        public int MagnetPullIndex { get; set; }
-        public int StaticCount { get; set; }
-        public int MagnetPullCount { get; set; }
-
-        public int SlotNumber { get; set; }
-
-        public int Level
-        {
-            set => LevelMin = LevelMax = value;
-        }
+        set => LevelMin = LevelMax = value;
     }
 }

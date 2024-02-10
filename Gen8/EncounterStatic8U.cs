@@ -11,7 +11,7 @@ internal static class EStat8U
     // private const AbilityPermission8 A4 = AbilityPermission8.Any12H;
 
     internal static readonly EncounterStatic8U[] DynAdv_SWSH =
-    {
+    [
         new(002,0,65) { Ability = A2, Moves = new(520,235,076,188) }, // Ivysaur
         new(005,0,65) { Ability = A2, Moves = new(519,406,203,517) }, // Charmeleon
         new(008,0,65) { Ability = A2, Moves = new(518,058,396,056) }, // Wartortle
@@ -284,8 +284,8 @@ internal static class EStat8U
         new(797,0,70) { Ability = A0, Moves = new(073,479,360,089) }, // Celesteela
         new(799,0,70) { Ability = A0, Moves = new(407,707,693,005) }, // Guzzlord
         new(806,0,70) { Ability = A0, Moves = new(421,269,126,428) }, // Blacephalon
-        new(805,0,70) { Ability = A0, Moves = new(157,038,693,475) }, // Stakataka
-    };
+        new(805,0,70) { Ability = A0, Moves = new(157,038,693,475) } // Stakataka
+    ];
 }
 
 internal class EncounterStatic8U

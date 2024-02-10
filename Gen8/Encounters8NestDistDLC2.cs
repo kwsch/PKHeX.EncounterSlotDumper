@@ -7,7 +7,7 @@ internal static partial class Encounters8Nest
     /// Nest distribution raids for <see cref="RaidVersion.SWSH"/> available after Crown Tundra expansion.
     /// </summary>
     internal static readonly EncounterStatic8ND[] Dist_DLC2 =
-    {
+    [
         new(17,01,1) { Species = 824, Ability = A4, Moves = new(522, 000, 000, 000), Index = 117 }, // Blipbug
         new(30,03,2) { Species = 833, Ability = A4, Moves = new(055, 033, 044, 029), Index = 117 }, // Chewtle
         new(40,05,3) { Species = 832, Ability = A4, Moves = new(036, 024, 428, 086), Index = 117 }, // Dubwool
@@ -931,6 +931,6 @@ internal static partial class Encounters8Nest
         new(60,10,5) { Species = 477, Ability = A4, Moves = new(247, 009, 280, 089), Index = 40 }, // Dusknoir
         new(60,10,5) { Species = 861, Ability = A4, Moves = new(789, 492, 421, 417), Index = 40, CanGigantamax = true }, // Grimmsnarl
         new(60,10,5) { Species = 635, Ability = A4, Moves = new(406, 304, 399, 056), Index = 40 }, // Hydreigon
-        new(60,10,5) { Species = 877, Ability = A4, Moves = new(783, 037, 242, 402), Index = 40 }, // Morpeko
-    };
+        new(60,10,5) { Species = 877, Ability = A4, Moves = new(783, 037, 242, 402), Index = 40 } // Morpeko
+    ];
 }

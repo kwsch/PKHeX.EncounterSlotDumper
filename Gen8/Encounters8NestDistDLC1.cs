@@ -9,7 +9,7 @@ internal static partial class Encounters8Nest
     /// Nest distribution raids for <see cref="RaidVersion.SWSH"/> available after Isle of Armor expansion and before Crown Tundra.
     /// </summary>
     internal static readonly EncounterStatic8ND[] Dist_DLC1 =
-    {
+    [
         new(17,01,1) { Species = 093, Ability = A4, Moves = new(371, 122, 095, 325), Index = 39}, // Haunter
         new(17,01,1) { Species = 425, Ability = A4, Moves = new(016, 506, 310, 371), Index = 39}, // Drifloon
         new(17,01,1) { Species = 355, Ability = A4, Moves = new(310, 425, 043, 506), Index = 39}, // Duskull
@@ -291,6 +291,6 @@ internal static partial class Encounters8Nest
         new(60,10,5,SH) { Species = 849, Ability = A4, Moves = new(786, 506, 599, 409), Index = 25, Form = 1, CanGigantamax = true}, // Toxtricity-1
         new(60,10,5,SH) { Species = 839, Ability = A4, Moves = new(246, 053, 157, 523), Index = 25, CanGigantamax = true}, // Coalossal
         new(60,10,5,SH) { Species = 068, Ability = A4, Moves = new(238, 007, 008, 089), Index = 25, CanGigantamax = true}, // Machamp
-        new(60,10,5,SH) { Species = 879, Ability = A4, Moves = new(442, 583, 438, 089), Index = 25, CanGigantamax = true}, // Copperajah
-    };
+        new(60,10,5,SH) { Species = 879, Ability = A4, Moves = new(442, 583, 438, 089), Index = 25, CanGigantamax = true} // Copperajah
+    ];
 }

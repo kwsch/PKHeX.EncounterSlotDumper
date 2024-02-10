@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 
-namespace PKHeX.EncounterSlotDumper
+namespace PKHeX.EncounterSlotDumper;
+
+[Flags]
+internal enum EncounterTime
 {
-    [Flags]
-    internal enum EncounterTime
-    {
-        Any = 0,
-        Morning = 1 << 1,
-        Day = 1 << 2,
-        Night = 1 << 3,
-    }
+    Any = 0,
+    Morning = 1 << 1,
+    Day = 1 << 2,
+    Night = 1 << 3,
 }

@@ -15,7 +15,7 @@ internal static partial class Encounters8Nest
     /// Nest distribution raids for <see cref="SWSH"/> available during base game era.
     /// </summary>
     internal static readonly EncounterStatic8ND[] Dist_Base =
-    {
+    [
         new(17,01,1) { Species = 052, Ability = A4, Moves = new(252, 044, 010, 364), Index = 23, CanGigantamax = true }, // Meowth
         new(17,01,1) { Species = 052, Ability = A4, Moves = new(006, 044, 010, 364), Index = 23, CanGigantamax = true }, // Meowth
         new(30,03,2) { Species = 052, Ability = A4, Moves = new(252, 044, 269, 154), Index = 23, CanGigantamax = true }, // Meowth
@@ -665,6 +665,6 @@ internal static partial class Encounters8Nest
         new(60,10,5,SH) { Species = 823, Ability = A4, Moves = new(413, 442, 249, 103), Index = 1 }, // Corviknight
         new(70,10,5,SH) { Species = 823, Ability = A4, Moves = new(413, 442, 249, 103), Index = 1, CanGigantamax = true }, // Corviknight
         new(60,10,5,SH) { Species = 851, Ability = A4, Moves = new(679, 257, 083, 438), Index = 1 }, // Centiskorch
-        new(70,10,5,SH) { Species = 851, Ability = A4, Moves = new(679, 257, 083, 438), Index = 1, CanGigantamax = true }, // Centiskorch
-    };
+        new(70,10,5,SH) { Species = 851, Ability = A4, Moves = new(679, 257, 083, 438), Index = 1, CanGigantamax = true } // Centiskorch
+    ];
 }

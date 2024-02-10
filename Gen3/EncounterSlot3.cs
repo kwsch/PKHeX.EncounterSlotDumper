@@ -1,21 +1,25 @@
-﻿using System.Collections.Generic;
+using System;
 
-namespace PKHeX.EncounterSlotDumper
+namespace PKHeX.EncounterSlotDumper;
+
+public record EncounterSlot3 : EncounterSlot34, IMagnetStatic, INumberedSlot
 {
-    public record EncounterSlot3 : EncounterSlot, IMagnetStatic, INumberedSlot
-    {
-        public int StaticIndex { get; set; } = -1;
-        public int MagnetPullIndex { get; set; } = -1;
-        public int StaticCount { get; set; }
-        public int MagnetPullCount { get; set; }
+    public override required ushort Species { get; init; }
+    public byte Form { get; set; }
+    public byte LevelMin { get; set; }
+    public byte LevelMax { get; set; }
 
-        public int SlotNumber { get; set; }
-    }
+    public byte StaticIndex { get; set; }
+    public byte MagnetPullIndex { get; set; }
+    public byte StaticCount { get; set; }
+    public byte MagnetPullCount { get; set; }
 
-    internal sealed record EncounterSlot3Swarm : EncounterSlot3
-    {
-        public IReadOnlyList<int> Moves { get; }
+    public byte SlotNumber { get; set; }
+}
 
-        public EncounterSlot3Swarm(IReadOnlyList<int> moves) => Moves = moves;
-    }
+internal sealed record EncounterSlot3Swarm : EncounterSlot3
+{
+    public ReadOnlyMemory<ushort> Moves { get; }
+
+    public EncounterSlot3Swarm(ReadOnlySpan<ushort> moves) => Moves = moves.ToArray();
 }

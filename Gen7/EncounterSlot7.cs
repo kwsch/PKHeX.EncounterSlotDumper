@@ -1,7 +1,11 @@
-﻿namespace PKHeX.EncounterSlotDumper
+namespace PKHeX.EncounterSlotDumper;
+
+public sealed record EncounterSlot7 : INumberedSlot
 {
-    public sealed record EncounterSlot7 : EncounterSlot, INumberedSlot
-    {
-        public int SlotNumber { get; set; }
-    }
+    public required ushort Species { get; set; }
+    public byte Form { get; set; }
+    public byte LevelMin { get; set; }
+    public byte LevelMax { get; set; }
+
+    public byte SlotNumber { get; set; }
 }

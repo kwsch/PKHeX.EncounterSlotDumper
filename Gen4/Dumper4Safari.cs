@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PKHeX.EncounterSlotDumper.Properties;
+using static PKHeX.EncounterSlotDumper.SlotType4;
 
 namespace PKHeX.EncounterSlotDumper;
 
@@ -78,7 +79,7 @@ public static class Dumper4Safari
     {
         var type = set.Type;
         bool hasWater = IsWater(index);
-        if (!hasWater && type != SlotType.Grass_Safari)
+        if (!hasWater && type != Safari_Grass)
             return;
 
         if (ExportParse)
@@ -108,7 +109,7 @@ public static class Dumper4Safari
         }
     }
 
-    private static EncounterArea4HGSS GetAreaWrapper(IEnumerable<SafariSlot> deduplicate, SlotType type, SafariSubZone index)
+    private static EncounterArea4HGSS GetAreaWrapper(IEnumerable<SafariSlot> deduplicate, SlotType4 type, SafariSubZone index)
     {
         var condensed = deduplicate
             .OrderBy(z => z.Species).ThenBy(z => z.Level)
@@ -148,11 +149,11 @@ public static class Dumper4Safari
 
         // Here we go!
         AddPermutationAndDerived(result, workspace, placed);
-        PermuteAdd(result, extra, blocks, workspace, used, placed, 0);
+        PermuteAdd(result, extra, blocks, workspace, used, placed);
     }
 
     private static void PermuteAdd(HashSet<SafariSlot> result, ReadOnlySpan<EncounterSlot4> extra, ReadOnlySpan<BlockRequirement> blocks,
-        EncounterSlot4[] workspace, Span<bool> used, Span<byte> placed, int slotIndex = 0, int depth = 0)
+        EncounterSlot4[] workspace, Span<bool> used, Span<byte> placed, byte slotIndex = 0, int depth = 0)
     {
         if (extra.Length == depth)
             return; // end of the line
@@ -176,7 +177,7 @@ public static class Dumper4Safari
             // else a deeper slot was needing to be true, we'll attempt it later.
 
             // DEEPER: Continue adding more slots.
-            PermuteAdd(result, extra, blocks, workspace, used, newPlaced, slotIndex + 1, depth + 1);
+            PermuteAdd(result, extra, blocks, workspace, used, newPlaced, (byte)(slotIndex + 1), depth + 1);
         }
 
         // Revert changes.
@@ -252,7 +253,7 @@ public static class Dumper4Safari
             AddToParse(workspace, blocks);
 
         // Run the magnet pull/static slot calc on it too.
-        List<EncounterSlot4> permuted = new();
+        List<EncounterSlot4> permuted = [];
         EncounterUtil.MarkEncountersStaticMagnetPullPermutation(workspace, PersonalTable.HGSS, permuted);
         foreach (var slot in permuted)
             result.Add(Slim(slot));
@@ -316,13 +317,13 @@ public static class Dumper4Safari
 
         public SafariSlot(EncounterSlot4 slot)
         {
-            Species = (ushort)slot.Species;
-            Level = (byte)slot.LevelMin;
-            SlotNumber = (byte)slot.SlotNumber;
-            StaticIndex = (byte)slot.StaticIndex;
-            MagnetPullIndex = (byte)slot.MagnetPullIndex;
-            StaticCount = (byte)slot.StaticCount;
-            MagnetPullCount = (byte)slot.MagnetPullCount;
+            Species = slot.Species;
+            Level = slot.LevelMin;
+            SlotNumber = slot.SlotNumber;
+            StaticIndex = slot.StaticIndex;
+            MagnetPullIndex = slot.MagnetPullIndex;
+            StaticCount = slot.StaticCount;
+            MagnetPullCount = slot.MagnetPullCount;
         }
 
         public EncounterSlot4 Inflate() => new()

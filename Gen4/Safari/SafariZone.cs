@@ -1,5 +1,7 @@
-﻿using System;
-using PKHeX.EncounterSlotDumper;
+using System;
+using static PKHeX.EncounterSlotDumper.SlotType4;
+
+namespace PKHeX.EncounterSlotDumper;
 
 public sealed class SafariZone
 {
@@ -23,11 +25,11 @@ public sealed class SafariZone
         var old = data.Slice(sizeGrass + sizeSurf, sizeFish);
         var good = data.Slice(sizeGrass + sizeSurf + sizeFish, sizeFish);
         var super = data.Slice(sizeGrass + sizeSurf + sizeFish + sizeFish, sizeFish);
-        Grass = new(grass, SlotType.Grass_Safari, Header.Grass);
-        Surf = new(surf, SlotType.Surf_Safari, Header.Surf);
-        Old = new(old, SlotType.Old_Rod_Safari, Header.Old);
-        Good = new(good, SlotType.Good_Rod_Safari, Header.Good);
-        Super = new(super, SlotType.Super_Rod_Safari, Header.Super);
+        Grass = new(grass, Safari_Grass, Header.Grass);
+        Surf = new(surf, Safari_Surf, Header.Surf);
+        Old = new(old, Safari_Old_Rod, Header.Old);
+        Good = new(good, Safari_Good_Rod, Header.Good);
+        Super = new(super, Safari_Super_Rod, Header.Super);
 
         // Every file is 912 bytes because the header is always the same.
     }

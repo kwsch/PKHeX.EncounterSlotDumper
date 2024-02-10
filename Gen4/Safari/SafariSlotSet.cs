@@ -1,9 +1,11 @@
-﻿using System;
-using PKHeX.EncounterSlotDumper;
+using System;
+using System.Buffers.Binary;
+
+namespace PKHeX.EncounterSlotDumper;
 
 public sealed class SafariSlotSet
 {
-    public readonly SlotType Type;
+    public readonly SlotType4 Type;
     public readonly EncounterSlot4[] Day     = new EncounterSlot4[10];
     public readonly EncounterSlot4[] Morning = new EncounterSlot4[10];
     public readonly EncounterSlot4[] Night   = new EncounterSlot4[10];
@@ -12,7 +14,7 @@ public sealed class SafariSlotSet
     public readonly EncounterSlot4[] ExtraNight;
     public readonly BlockRequirement[] ExtraBlocks;
 
-    public SafariSlotSet(ReadOnlySpan<byte> data, SlotType type, int extraCount)
+    public SafariSlotSet(ReadOnlySpan<byte> data, SlotType4 type, int extraCount)
     {
         Type = type;
 
@@ -30,7 +32,7 @@ public sealed class SafariSlotSet
         // Read Slots
         for (int i = 0; i < result.Length; i++)
         {
-            result[i] = Get(data[..4], i);
+            result[i] = Get(data[..4], (byte)i);
             data = data[4..];
         }
     }
@@ -53,9 +55,9 @@ public sealed class SafariSlotSet
         Count1 = data[3],
     };
 
-    private static EncounterSlot4 Get(ReadOnlySpan<byte> data, int slot) => new()
+    private static EncounterSlot4 Get(ReadOnlySpan<byte> data, byte slot) => new()
     {
-        Species = System.Buffers.Binary.BinaryPrimitives.ReadUInt16LittleEndian(data[..2]),
+        Species = BinaryPrimitives.ReadUInt16LittleEndian(data[..2]),
         Level = data[2],
         SlotNumber = slot,
     };
