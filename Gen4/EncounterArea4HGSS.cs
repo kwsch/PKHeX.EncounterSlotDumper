@@ -99,7 +99,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         }
 
         area.Slots = [.. slots];
-        EncounterUtil.MarkEncountersStaticMagnetPull(new [] {area}, PersonalTable.HGSS);
+        EncounterUtil.MarkEncountersStaticMagnetPull(area, PersonalTable.HGSS);
         return slots;
     }
 
@@ -107,6 +107,8 @@ public sealed record EncounterArea4HGSS : EncounterArea4
     {
         var Slots = new List<EncounterSlot4>();
         var location = BitConverter.ToUInt16(data, 0x00);
+        if (location > byte.MaxValue)
+            throw new Exception("Location ID too large");
 
         var GrassRate = data[0x02];
         var SurfRate = data[0x03];
@@ -153,12 +155,20 @@ public sealed record EncounterArea4HGSS : EncounterArea4
                 Slots.AddRange(extra);
             }
 
-            yield return new EncounterArea4HGSS {Location = location, Rate = GrassRate, Type = Grass, Slots = [.. Slots]};
+            yield return new EncounterArea4HGSS
+            {
+                Location = (byte)location,
+                Rate = GrassRate,
+                Type = Grass,
+                Slots = [.. Slots],
+            };
         }
 
         if (SurfRate > 0)
         {
-            var area = new EncounterArea4HGSS { Location = location,
+            var area = new EncounterArea4HGSS
+            {
+                Location = (byte)location,
                 Type = Surf, 
                 Rate = SurfRate,
                 Slots = [],
@@ -169,7 +179,9 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         if (RockSmashRate > 0)
         {
-            var area = new EncounterArea4HGSS { Location = location, 
+            var area = new EncounterArea4HGSS
+            {
+                Location = (byte)location, 
                 Type = Rock_Smash, 
                 Rate = RockSmashRate,
                 Slots = [],
@@ -185,7 +197,9 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         if (OldRate > 0)
         {
-            var area = new EncounterArea4HGSS { Location = location,
+            var area = new EncounterArea4HGSS
+            {
+                Location = (byte)location,
                 Type = Old_Rod,
                 Rate = OldRate,
                 Slots = [],
@@ -202,7 +216,9 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         if (GoodRate > 0)
         {
-            var area = new EncounterArea4HGSS { Location = location, 
+            var area = new EncounterArea4HGSS
+            {
+                Location = (byte)location, 
                 Type = Good_Rod, 
                 Rate = GoodRate,
                 Slots = [],
@@ -222,7 +238,9 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         if (SuperRate > 0)
         {
-            var area = new EncounterArea4HGSS { Location = location, 
+            var area = new EncounterArea4HGSS
+            {
+                Location = (byte)location, 
                 Type = Super_Rod,
                 Rate = SuperRate,
                 Slots = [],
@@ -247,11 +265,16 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         //2 byte location ID
         ushort location = BitConverter.ToUInt16(data, 0);
+        if (location > byte.MaxValue)
+            throw new Exception("Location ID too large");
         //4 bytes padding
         var Slots = new List<EncounterSlot4>();
 
         // 00-11 Normal trees
-        var area = new EncounterArea4HGSS { Location = location, 
+        var area = new EncounterArea4HGSS
+        {
+            Rate = 0,
+            Location = (byte)location, 
             Type = Headbutt,
             Slots = [],
         };
@@ -276,7 +299,10 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         }
 
         // 12-17 Special trees
-        area = new EncounterArea4HGSS{Location = location, 
+        area = new EncounterArea4HGSS
+        {
+            Rate = 0,
+            Location = (byte)location, 
             Type = HeadbuttSpecial,
             Slots = [],
         };

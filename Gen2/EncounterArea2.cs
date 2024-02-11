@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using static System.Buffers.Binary.BinaryPrimitives;
 using static PKHeX.EncounterSlotDumper.SlotType2;
 
 namespace PKHeX.EncounterSlotDumper;
@@ -25,27 +27,27 @@ public enum SlotType2 : byte
 
 public sealed record EncounterArea2
 {
-    public required EncounterSlot2[] Slots;
-    public ushort Location { get; set; }
-
-    public byte[] Rates { get; set; }
+    public required EncounterSlot2[] Slots { get; set; }
+    public byte Location { get; set; }
+    public required byte AreaRate { get; init; }
     public required SlotType2 Type { get; init; }
+    public byte[] SlotRates { get; init; } = [];
 
     /// <summary>
     /// Gets the encounter areas with <see cref="EncounterSlot2"/> information from Generation 2 Grass/Water data.
     /// </summary>
     /// <param name="data">Input raw data.</param>
     /// <returns>Array of encounter areas.</returns>
-    public static EncounterArea2[] GetArray2GrassWater(byte[] data)
+    public static EncounterArea2[] GetArray2GrassWater(ReadOnlySpan<byte> data)
     {
         int ofs = 0;
         var areas = new List<EncounterArea2>();
-        areas.AddRange(GetAreas2(data, ref ofs, Grass, 3, 7)); // Johto Grass
-        areas.AddRange(GetAreas2(data, ref ofs, Surf, 1, 3)); // Johto Water
-        areas.AddRange(GetAreas2(data, ref ofs, Grass, 3, 7)); // Kanto Grass
-        areas.AddRange(GetAreas2(data, ref ofs, Surf, 1, 3)); // Kanto Water
-        areas.AddRange(GetAreas2(data, ref ofs, Grass, 3, 7)); // Swarm Grass
-        areas.AddRange(GetAreas2(data, ref ofs, Surf, 1, 3)); // Swarm Water
+        areas.AddRange(GetAreas2(data, ref ofs, 3, 7, Grass)); // Johto Grass
+        areas.AddRange(GetAreas2(data, ref ofs, 1, 3, Surf)); // Johto Water
+        areas.AddRange(GetAreas2(data, ref ofs, 3, 7, Grass)); // Kanto Grass
+        areas.AddRange(GetAreas2(data, ref ofs, 1, 3, Surf)); // Kanto Water
+        areas.AddRange(GetAreas2(data, ref ofs, 3, 7, Grass)); // Swarm Grass
+        areas.AddRange(GetAreas2(data, ref ofs, 1, 3, Surf)); // Swarm Water
 
         // Strip out inaccessible areas.
         {
@@ -76,7 +78,7 @@ public sealed record EncounterArea2
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
     ];
 
-    private static readonly (byte Group, byte LocationID)[] FishSwarm =
+    private static readonly (sbyte Group, byte LocationID)[] FishSwarm =
     [
         (5, 8), // Qwilfish
         (6, 39) // Remoraid
@@ -87,20 +89,20 @@ public sealed record EncounterArea2
     /// </summary>
     /// <param name="data">Input raw data.</param>
     /// <returns>Array of encounter areas.</returns>
-    public static EncounterArea2[] GetArray2Fishing(byte[] data)
+    public static EncounterArea2[] GetArray2Fishing(ReadOnlySpan<byte> data)
     {
         int ofs = 0;
         var f = GetAreas2Fishing(data, ref ofs);
 
         var areas = new List<EncounterArea2>();
-        for (var i = 0; i < FishGroupForMapID.Length; i++)
+        for (byte i = 0; i < FishGroupForMapID.Length; i++)
         {
             var group = FishGroupForMapID[i];
             if (group != -1)
-                AddTableForLocation(group, (byte)i);
+                AddTableForLocation(group, i);
         }
 
-        void AddTableForLocation(int group, byte locationID)
+        void AddTableForLocation(sbyte group, byte locationID)
         {
             foreach (var t in f.Where(z => z.Location == group))
             {
@@ -121,52 +123,22 @@ public sealed record EncounterArea2
         return [.. areas];
     }
 
-    public static EncounterArea2[] GetArray2Headbutt(byte[] data)
+    public static EncounterArea2[] GetArray2Headbutt(ReadOnlySpan<byte> data)
     {
         int ofs = 0;
         return GetAreas2Headbutt(data, ref ofs).ToArray();
     }
 
-    private static EncounterSlot2[] GetSlots2GrassWater(EncounterArea2 area, byte[] data, ref int ofs, SlotType2 t, int slotSets, int slotCount)
+    private static EncounterArea2 GetSlots2Fishing(ReadOnlySpan<byte> data, ref int ofs, byte location, SlotType2 t)
     {
-        byte[] rates = new byte[slotSets];
-        for (int i = 0; i < rates.Length; i++)
-            rates[i] = data[ofs++];
-
-        area.Rates = rates;
-        var slots = EncounterSlot2.ReadSlots(data, ref ofs, slotSets * slotCount, t);
-        if (slotSets <= 1)
-            return slots;
-
-        for (int i = 0; i < slotCount; i++)
-        {
-            slots[i].Time = EncounterTime.Morning;
-        }
-        for (int r = 1; r < slotSets; r++)
-        {
-            for (int i = 0; i < slotCount; i++)
-            {
-                int index = i + (r * slotCount);
-                slots[index].SlotNumber = i;
-                slots[index].Time = r == 1 ? EncounterTime.Day : EncounterTime.Night;
-            }
-        }
-
-        return slots;
-    }
-
-    private static void GetSlots2Fishing(EncounterArea2 area, byte[] data, ref int ofs)
-    {
+        // scan for count
         // slot set ends with final slot having 0xFF 0x** 0x**
         const int size = 3;
-        int end = ofs; // scan for count
-        while (data[end] != 0xFF)
-            end += size;
+        var length = data[ofs..].IndexOf(byte.MaxValue) + size;
+        var count = length / size;
 
-        var count = ((end - ofs) / size) + 1;
-
-        var rates = area.Rates = new byte[count];
-        var slots = area.Slots = new EncounterSlot2[count];
+        var rates = new byte[count];
+        var slots = new EncounterSlot2[count];
         for (int i = 0; i < slots.Length; i++)
         {
             rates[i] = data[ofs++];
@@ -174,174 +146,211 @@ public sealed record EncounterArea2
             var level = data[ofs++];
             slots[i] = new EncounterSlot2(species, level, level, (byte)i);
         }
+
+        return new() { Location = location, AreaRate = 50, SlotRates = rates, Slots = slots, Type = t };
     }
 
-    private static void GetSlots2Headbutt(ICollection<EncounterArea2> areas, EncounterArea2 a, byte[] data, ref int ofs, int tableCount)
+    private static void GetSlots2HeadRock(ICollection<EncounterArea2> areas, byte location, ReadOnlySpan<byte> data, ref int ofs,
+        [ConstantExpected] int tableCount)
     {
-        // slot set ends in 0xFF
-        var slots = new List<EncounterSlot2>();
-        var rates = new List<byte>();
-        int slot = 0;
-        while (tableCount != 0)
+        // rate, species, level (3 bytes)
+        // slot set ends in 0xFF (1 byte)
+        if (tableCount == 1)
         {
-            byte rate = data[ofs++];
-            if (rate == 0xFF) // end of table
-            {
-                tableCount--;
-                if (tableCount == 1)
-                {
-                    a.Slots = [.. slots];
-                    a.Rates = [.. rates];
+            areas.Add(ReadHeadbuttArea(data, ref ofs, location, Rock_Smash));
+        }
+        else
+        {
+            areas.Add(ReadHeadbuttArea(data, ref ofs, location, Headbutt));
+            areas.Add(ReadHeadbuttArea(data, ref ofs, location, HeadbuttSpecial));
+        }
+    }
 
-                    a = new EncounterArea2 { Location = a.Location, Type = HeadbuttSpecial, Slots = [] };
-                    slots.Clear();
-                    rates.Clear();
-                    areas.Add(a);
-                }
-                continue;
-            }
+    private static EncounterArea2 ReadHeadbuttArea(ReadOnlySpan<byte> data, ref int ofs, byte location, [ConstantExpected] SlotType2 type)
+    {
+        const int size = 3;
+        int length = data[ofs..].IndexOf(byte.MaxValue);
+        int count = length / size;
 
+        var rates = new byte[count];
+
+        var slots = new EncounterSlot2[count];
+        for (int i = 0; i < count; i++)
+        {
+            rates[i] = data[ofs++];
             var species = data[ofs++];
             var level = data[ofs++];
-            rates.Add(rate);
-            slots.Add(new EncounterSlot2(species, level, level, (byte)(slot++)));
+            slots[i] = new EncounterSlot2(species, level, level, (byte)i);
         }
-        a.Slots = [.. slots];
-        a.Rates = [.. rates];
+
+        ofs++; // 0xFF
+        return new() { Location = location, AreaRate = 0, SlotRates = rates, Slots = slots, Type = type };
     }
 
-    private static IEnumerable<EncounterArea2> GetAreas2(byte[] data, ref int ofs, SlotType2 t, int slotSets, int slotCount)
+    private static IEnumerable<EncounterArea2> GetAreas2(ReadOnlySpan<byte> data, ref int ofs,
+        [ConstantExpected] int slotSets, [ConstantExpected] int slotCount,
+        [ConstantExpected] SlotType2 t)
     {
         var areas = new List<EncounterArea2>();
         while (data[ofs] != 0xFF) // end
-        {
-            var location = data[ofs++] << 8 | data[ofs++];
-            var area = new EncounterArea2 { Location = (ushort)location, Type = t, Slots = [] };
-            var slots = GetSlots2GrassWater(area, data, ref ofs, t, slotSets, slotCount);
-            area.Slots = slots;
-            areas.Add(area);
-        }
+            AddSlots2GrassWater(data, areas, ref ofs, t, slotSets, slotCount);
         ofs++;
         return areas;
     }
 
-    private static List<EncounterArea2> GetAreas2Fishing(byte[] data, ref int ofs)
+    private static void AddSlots2GrassWater(ReadOnlySpan<byte> data, List<EncounterArea2> areas, ref int ofs,
+        [ConstantExpected] SlotType2 t,
+        [ConstantExpected] int slotSets, [ConstantExpected] int slotCount)
     {
-        byte a = 0;
+        var x = data[ofs++]; // 0x00
+        if (x > 30)
+            throw new Exception("Invalid data format");
+
+        var location = data[ofs++];
+        var areaRates = data.Slice(ofs, slotSets);
+        ofs += slotSets;
+
+        for (int i = 0; i < areaRates.Length; i++)
+        {
+            var areaRate = areaRates[i];
+            var slots = EncounterSlot2.ReadSlots(data, ref ofs, slotCount, t);
+
+            if (areaRates.Length != 1) // Time of Day rates.
+            {
+                var time = i switch
+                {
+                    0 => EncounterTime.Morning,
+                    1 => EncounterTime.Day,
+                    2 => EncounterTime.Night,
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
+                foreach (var slot in slots)
+                    slot.Time = time;
+            }
+
+            var area = new EncounterArea2 { Location = location, AreaRate = areaRate, Slots = slots, Type = t };
+            areas.Add(area);
+        }
+    }
+
+    private static List<EncounterArea2> GetAreas2Fishing(ReadOnlySpan<byte> data, ref int ofs)
+    {
+        byte areaIndex = 0;
         var areas = new List<EncounterArea2>();
         while (ofs != 0x18C)
         {
-            var aOld = new EncounterArea2 { Location = a, Type = Old_Rod, Slots = [] };
-            var aGood = new EncounterArea2 { Location = a, Type = Good_Rod, Slots = [] };
-            var aSuper = new EncounterArea2 { Location = a, Type = Super_Rod, Slots = [] };
-            GetSlots2Fishing(aOld, data, ref ofs);
-            GetSlots2Fishing(aGood, data, ref ofs);
-            GetSlots2Fishing(aSuper, data, ref ofs);
-
-            areas.Add(aOld);
-            areas.Add(aGood);
-            areas.Add(aSuper);
-            _ = checked(++a);
+            areas.Add(GetSlots2Fishing(data, ref ofs, areaIndex, Old_Rod));
+            areas.Add(GetSlots2Fishing(data, ref ofs, areaIndex, Good_Rod));
+            areas.Add(GetSlots2Fishing(data, ref ofs, areaIndex, Super_Rod));
+            _ = checked(++areaIndex);
         }
 
-        // Read TimeFishGroups
-        var dl = new List<SlotTemplate>();
+        // Read TimeFishGroups (two per entry)
+        var dl = new List<TimeTemplate>();
         while (ofs < data.Length)
-            dl.Add(new SlotTemplate(data[ofs++], data[ofs++]));
+            dl.Add(new TimeTemplate(data[ofs++], data[ofs++], data[ofs++], data[ofs++]));
 
         // Add TimeSlots
-        foreach (var area in areas)
+        // A slot with species 0 will use time group {level}.
+        for (int a = 0; a < areas.Count; a++)
         {
-            var slots = area.Slots;
-            for (int i = 0; i < slots.Length; i++)
+            var area = areas[a];
+            var length = area.Slots.Length;
+            for (int i = 0; i < length; i++)
             {
-                var slot = slots[i];
-                if (slot.Species != 0)
+                var timeSlot = area.Slots[i];
+                if (timeSlot.Species != 0)
                     continue;
+                var group = timeSlot.LevelMin;
 
-                Array.Resize(ref slots, slots.Length + 1);
-                Array.Copy(slots, i, slots, i + 1, slots.Length - i - 1); // shift slots down
-                slots[i + 1] = slot with { }; // differentiate copied slot
+                // Mutate the current table into two areas.
+                var dayTable = area.Slots;
+                var nightTable = area.Slots.ToArray();
+                var tg = dl[group];
+                (dayTable[i], nightTable[i]) = tg.GetSlots(timeSlot);
 
-                int index = slot.LevelMin * 2;
-                for (int j = 0; j < 2; j++) // load special slot info
-                {
-                    var s = slots[i + j];
-                    var species = dl[index + j].Species;
-                    var level = dl[index + j].Level;
-                    var time = j == 0 ? EncounterTime.Morning | EncounterTime.Day : EncounterTime.Night;
-                    s.SetAsSpecial(species, level, time);
-                }
+                area.Slots = dayTable;
+                areas.Insert(++a, area with { Slots = nightTable });
+                break;
             }
-            area.Slots = slots;
         }
+
         return areas;
     }
 
-    private readonly struct SlotTemplate
+    private readonly record struct TimeTemplate(byte SpeciesD, byte LevelD, byte SpeciesN, byte LevelN)
     {
-        public readonly byte Species;
-        public readonly byte Level;
-
-        public SlotTemplate(byte species, byte level)
+        public (EncounterSlot2 Day, EncounterSlot2 Night) GetSlots(EncounterSlot2 slot)
         {
-            Species = species;
-            Level = level;
+            var d = slot with { Species = SpeciesD, LevelMin = LevelD, LevelMax = LevelD, Time = EncounterTime.Morning |  EncounterTime.Day };
+            var n = slot with { Species = SpeciesN, LevelMin = LevelN, LevelMax = LevelD, Time = EncounterTime.Night };
+            return (d, n);
         }
     }
 
-    private static IEnumerable<EncounterArea2> GetAreas2Headbutt(byte[] data, ref int ofs)
+    private static IEnumerable<EncounterArea2> GetAreas2Headbutt(ReadOnlySpan<byte> data, ref int ofs)
     {
         // Read Location Table
-        var head = new List<EncounterArea2>();
-        var headID = new List<int>();
+        // 00, location, group
+        var headLoc = new List<byte>();
+        var headID = new List<byte>();
         while (data[ofs] != 0xFF)
         {
-            head.Add(new EncounterArea2
-            {
-                Location = (ushort)((data[ofs++] << 8) | data[ofs++]),
-                Type = Headbutt,
-                Slots = [],
-            });
+            var x = data[ofs++]; // 0x00
+            if (x > 30)
+                throw new Exception("Invalid data format");
+            headLoc.Add(data[ofs++]);
             headID.Add(data[ofs++]);
         }
-        ofs++;
+        ofs++; // 0xFF
 
-        var rock = new List<EncounterArea2>();
-        var rockID = new List<int>();
+        var rockLoc = new List<byte>();
+        var rockID = new List<byte>();
         while (data[ofs] != 0xFF)
         {
-            rock.Add(new EncounterArea2
-            {
-                Location = (ushort)((data[ofs++] << 8) | data[ofs++]),
-                Type = Rock_Smash,
-                Slots = [],
-            });
+            var x = data[ofs++]; // 0x00
+            if (x > 30)
+                throw new Exception("Invalid data format");
+            rockLoc.Add(data[ofs++]);
             rockID.Add(data[ofs++]);
         }
         ofs++;
         ofs += 0x16; // jump over GetTreeMons
 
         // Read ptr table
-        int[] ptr = new int[data.Length == 0x109 ? 6 : 9]; // GS : C
+        Span<ushort> ptr = stackalloc ushort[data.Length == 0x109 ? 6 : 9]; // GS : C
         for (int i = 0; i < ptr.Length; i++)
-            ptr[i] = data[ofs++] | (data[ofs++] << 8);
+        {
+            ptr[i] = ReadUInt16LittleEndian(data[ofs..]);
+            ofs += 2;
+        }
 
-        int baseOffset = ptr.Min() - ofs;
+        var min = GetMin(ptr);
+        int baseOffset = min - ofs;
 
         // Read Tables
-        int headCount = head.Count;
+        var head = new List<EncounterArea2>();
+        var rock = new List<EncounterArea2>();
+        int headCount = headLoc.Count;
         for (int i = 0; i < headCount; i++)
         {
             int o = ptr[headID[i]] - baseOffset;
-            GetSlots2Headbutt(head, head[i], data, ref o, 2);
+            GetSlots2HeadRock(head, headLoc[i], data, ref o, 2);
         }
         for (int i = 0; i < rock.Count; i++)
         {
             int o = ptr[rockID[i]] - baseOffset;
-            GetSlots2Headbutt(rock, rock[i], data, ref o, 1);
+            GetSlots2HeadRock(rock, rockLoc[i], data, ref o, 1);
         }
 
         return head.Concat(rock);
+    }
+
+    private static int GetMin(Span<ushort> ptr)
+    {
+        int min = int.MaxValue;
+        foreach (var p in ptr)
+            min = Math.Min(min, p);
+        return min;
     }
 }

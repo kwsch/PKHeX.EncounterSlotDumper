@@ -8,12 +8,12 @@ namespace PKHeX.EncounterSlotDumper;
 internal readonly struct TreeCoordinates
 {
 #if DEBUG
-    private readonly int X;
-    private readonly int Y;
+    private readonly byte X;
+    private readonly byte Y;
 #endif
     public readonly byte Index;
 
-    public TreeCoordinates(in int x, in int y)
+    public TreeCoordinates(in byte x, in byte y)
     {
 #if DEBUG
         X = x;
@@ -27,19 +27,18 @@ internal readonly struct TreeCoordinates
 #endif
 }
 
-#pragma warning disable CA1819 // Properties should not return arrays
 [Serializable]
 public class TreeAreaListing
 {
-    public TreeAreaInfo[] Table { get; set; }
+    public required TreeAreaInfo[] Table { get; init; }
 }
 
 [Serializable]
 public class TreeAreaInfo
 {
-    public byte Location { get; set; }
-    public Tree[] Valid { get; set; }
-    public Tree[] Invalid { get; set; }
+    public required byte Location { get; init; }
+    public required Tree[] Valid { get; init; }
+    public required Tree[] Invalid { get; init; }
 }
 
 [Serializable]
@@ -48,4 +47,3 @@ public class Tree
     public int X { get; set; }
     public int Y { get; set; }
 }
-#pragma warning restore CA1819 // Properties should not return arrays

@@ -3,7 +3,7 @@ using System;
 namespace PKHeX.EncounterSlotDumper;
 
 [Flags]
-internal enum EncounterTime
+internal enum EncounterTime : byte
 {
     Any = 0,
     Morning = 1 << 1,

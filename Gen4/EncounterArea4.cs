@@ -6,12 +6,12 @@ namespace PKHeX.EncounterSlotDumper;
 
 public abstract record EncounterArea4
 {
-    public required EncounterSlot4[] Slots;
+    public required EncounterSlot4[] Slots { get; set; }
 
-    public ushort Location { get; set; }
-    public byte Rate { get; set; }
-    public EncounterType TypeEncounter { get; set; } = EncounterType.None;
+    public required byte Location { get; init; }
+    public required byte Rate { get; set; }
     public required SlotType4 Type { get; init; }
+    public EncounterType TypeEncounter { get; set; } = EncounterType.None;
 
     /// <summary>
     /// Reads the GBA Pak Special slots, cloning slot data from the area's base encounter slots.

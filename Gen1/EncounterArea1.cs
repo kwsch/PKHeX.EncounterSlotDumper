@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using static System.Buffers.Binary.BinaryPrimitives;
 using static PKHeX.EncounterSlotDumper.SlotType1;
 
 namespace PKHeX.EncounterSlotDumper;
@@ -15,17 +17,12 @@ public enum SlotType1 : byte
 
 public sealed record EncounterArea1
 {
-    public required EncounterSlot1[] Slots;
     public byte Location { get; set; }
-
-    /// <summary>
-    /// Wild Encounter activity rate
-    /// </summary>
-    public int Rate { get; set; }
-
+    public required byte Rate { get; init; }
     public required SlotType1 Type { get; init; }
+    public required EncounterSlot1[] Slots { get; init; }
 
-    private static EncounterSlot1[] ReadSlots1FishingYellow(byte[] data, ref int ofs, int count)
+    private static EncounterSlot1[] ReadSlots1FishingYellow(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] int count)
     {
         // Convert byte to actual number
         ReadOnlySpan<byte> levels = [0xFF, 0x15, 0x67, 0x1D, 0x3B, 0x5C, 0x72, 0x16, 0x71, 0x18, 0x00, 0x6D, 0x80];
@@ -49,58 +46,49 @@ public sealed record EncounterArea1
     /// <param name="data">Input raw data.</param>
     /// <param name="count">Count of areas in the binary.</param>
     /// <returns>Array of encounter areas.</returns>
-    public static EncounterArea1[] GetArray1GrassWater(byte[] data, int count)
+    public static EncounterArea1[] GetArray1GrassWater(ReadOnlySpan<byte> data, [ConstantExpected] int count)
     {
         var areas = new List<EncounterArea1>(count);
         for (int i = 0; i < count; i++)
         {
-            int ptr = BitConverter.ToInt16(data, i * 2);
-            var g = new EncounterArea1
-            {
-                Type = Grass,
-                Location = (byte)i,
-                Slots = [],
-            };
+            int ptr = ReadUInt16LittleEndian(data[(i * 2)..]);
 
-            var gSlots = GetSlots1GrassWater(data, g, ref ptr);
-            if (gSlots.Length > 0)
-            {
-                areas.Add(g);
-                g.Slots = gSlots;
-            }
-
-            var w = new EncounterArea1
-            {
-                Type = Surf,
-                Location = (byte)i,
-                Slots = [],
-            };
-            var wSlots = GetSlots1GrassWater(data, w, ref ptr);
-            if (wSlots.Length > 0)
-            {
-                areas.Add(w);
-                w.Slots = wSlots;
-            }
+            var gRate = data[ptr++];
+            if (gRate != 0)
+                areas.Add(ReadSlotsGW(data, ptr, i, gRate, Grass));
+            var wRate = data[ptr++];
+            if (wRate != 0)
+                areas.Add(ReadSlotsGW(data, ptr, i, wRate, Surf));
         }
 
         return [.. areas];
     }
+
+    private static EncounterArea1 ReadSlotsGW(ReadOnlySpan<byte> data, int ofs, int areaIndex, byte rate, SlotType1 type)
+        => new()
+    {
+        Location = (byte)areaIndex,
+        Rate = rate,
+        Type = type,
+        Slots = GetSlots1GrassWater(data, ref ofs),
+    };
 
     /// <summary>
     /// Gets the encounter areas with slot information from Pokémon Yellow (Generation 1) Fishing data.
     /// </summary>
     /// <param name="data">Input raw data.</param>
     /// <returns>Array of encounter areas.</returns>
-    public static EncounterArea1[] GetArray1FishingYellow(byte[] data)
+    public static EncounterArea1[] GetArray1FishingYellow(ReadOnlySpan<byte> data)
     {
         const int size = 9;
         int count = data.Length / size;
-        EncounterArea1[] areas = new EncounterArea1[count];
+        var areas = new EncounterArea1[count];
         for (int i = 0; i < count; i++)
         {
             int ofs = (i * size) + 1;
             areas[i] = new EncounterArea1
             {
+                Rate = 0, // Not really a rate, done separately. Dialogue disjoint.
                 Location = data[(i * size) + 0],
                 Type = Super_Rod,
                 Slots = ReadSlots1FishingYellow(data, ref ofs, 4)
@@ -116,34 +104,56 @@ public sealed record EncounterArea1
     /// <param name="data">Input raw data.</param>
     /// <param name="count">Count of areas in the binary.</param>
     /// <returns>Array of encounter areas.</returns>
-    public static EncounterArea1[] GetArray1Fishing(byte[] data, int count)
+    public static EncounterArea1[] GetArray1Fishing(ReadOnlySpan<byte> data, [ConstantExpected] int count)
     {
         var areas = new EncounterArea1[count];
         for (int i = 0; i < areas.Length; i++)
         {
             int loc = data[(i * 3) + 0];
-            int ptr = BitConverter.ToInt16(data, (i * 3) + 1);
+            int ptr = ReadUInt16LittleEndian(data[((i * 3) + 1)..]);
             areas[i] = new EncounterArea1
             {
+                Rate = 0, // Not really a rate, done separately. Dialogue disjoint.
                 Location = (byte)loc,
                 Type = Super_Rod,
-                Slots = GetSlots1Fishing(data, ptr)
+                Slots = GetSlots1Fishing(data, ref ptr)
             };
         }
 
         return areas;
     }
 
-    private static EncounterSlot1[] GetSlots1GrassWater(byte[] data, EncounterArea1 a, ref int ofs)
+    private static EncounterSlot1[] GetSlots1GrassWater(ReadOnlySpan<byte> data, ref int ofs)
     {
-        int rate = data[ofs++];
-        a.Rate = rate;
-        return rate == 0 ? [] : EncounterSlot1.ReadSlots(data, ref ofs, 10, Grass);
+        return EncounterSlot1.ReadSlots(data, ref ofs, 10, Grass);
     }
 
-    private static EncounterSlot1[] GetSlots1Fishing(byte[] data, int ofs)
+    private static EncounterSlot1[] GetSlots1Fishing(ReadOnlySpan<byte> data, ref int ofs)
     {
-        int count = data[ofs++];
+        var count = data[ofs++];
         return EncounterSlot1.ReadSlots(data, ref ofs, count, Super_Rod);
     }
+
+    public static readonly EncounterArea1 FishOld_RBY = new()
+    {
+        Location = 88, // Any, choose Pallet Town (FR/LG index)
+        Type = Old_Rod,
+        Rate = 0,
+        Slots =
+        [
+            new EncounterSlot1(129, 05, 05, 0), // Magikarp
+        ]
+    };
+
+    public static readonly EncounterArea1 FishGood_RBY = new()
+    {
+        Location = 88, // Any, choose Pallet Town (FR/LG index)
+        Type = Good_Rod,
+        Rate = 0,
+        Slots =
+        [
+            new EncounterSlot1(118, 10, 10, 0), // Goldeen
+            new EncounterSlot1(060, 10, 10, 1), // Poliwag
+        ]
+    };
 }

@@ -184,6 +184,7 @@ public static class Dumper3
     public static EncounterArea3 FishFeebas = new()
     {
         Location = 34, // Route 119
+        Rate = 0,
         Type = SlotType3.SwarmFish50,
         Slots =
         [
@@ -210,6 +211,7 @@ public static class Dumper3
         return new EncounterArea3
         {
             Location = location,
+            Rate = 7,
             Type = SlotType3.Grass,
             Slots = slots,
         };

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using static System.Buffers.Binary.BinaryPrimitives;
 using static PKHeX.EncounterSlotDumper.SlotType3;
 
 namespace PKHeX.EncounterSlotDumper;
@@ -18,28 +20,29 @@ public enum SlotType3 : byte
 
 public sealed record EncounterArea3
 {
-    public required EncounterSlot3[] Slots;
-    public required byte Location;
+    public required EncounterSlot3[] Slots { get; init; }
+    public required byte Location { get; init; }
+    public required byte Rate { get; init; }
+    public required SlotType3 Type { get; init; }
 
-    public int Rate { get; set; }
-    public required SlotType3 Type { get; set; }
-
-    private static void GetSlots3(byte[] data, ref int ofs, int numslots, List<EncounterArea3> areas, byte location, SlotType3 t)
+    private static void GetSlots3(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] int numslots,
+        List<EncounterArea3> areas, byte location, [ConstantExpected] SlotType3 t)
     {
-        int rate = data[ofs];
+        var rate = data[ofs];
         //1 byte padding
         if (rate > 0)
             ReadInSlots(data, ofs, numslots, areas, location, t, rate);
         ofs += 2 + (numslots * 4);
     }
 
-    private static void ReadInSlots(byte[] data, int ofs, int numslots, List<EncounterArea3> areas, byte location, SlotType3 t, int rate)
+    private static void ReadInSlots(ReadOnlySpan<byte> data, int ofs, [ConstantExpected] int numslots,
+        List<EncounterArea3> areas, byte location, [ConstantExpected] SlotType3 t, byte rate)
     {
         var slots = new List<EncounterSlot3>();
         for (int i = 0; i < numslots; i++)
         {
             int o = ofs + (i * 4);
-            var species = BitConverter.ToInt16(data, o + 4);
+            var species = ReadInt16LittleEndian(data[(o + 4)..]);
             if (species <= 0)
                 continue;
 
@@ -56,7 +59,8 @@ public sealed record EncounterArea3
         areas.Add(area);
     }
 
-    private static void GetSlots3Fishing(byte[] data, ref int ofs, int numslots, List<EncounterArea3> areas, byte location)
+    private static void GetSlots3Fishing(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] int numslots,
+        List<EncounterArea3> areas, byte location)
     {
         int Ratio = data[ofs];
         //1 byte padding
@@ -65,14 +69,15 @@ public sealed record EncounterArea3
         ofs += 2 + (numslots * 4);
     }
 
-    private static void ReadFishingSlots(byte[] data, int ofs, int numslots, List<EncounterArea3> areas, byte location)
+    private static void ReadFishingSlots(ReadOnlySpan<byte> data, int ofs, [ConstantExpected] int numslots,
+        List<EncounterArea3> areas, byte location)
     {
         var o = new List<EncounterSlot3>();
         var g = new List<EncounterSlot3>();
         var s = new List<EncounterSlot3>();
         for (int i = 0; i < numslots; i++)
         {
-            var species = BitConverter.ToInt16(data, ofs + 4 + (i * 4));
+            var species = ReadInt16LittleEndian(data[(ofs + 4 + (i * 4))..]);
             if (species <= 0)
                 continue;
 
@@ -100,15 +105,19 @@ public sealed record EncounterArea3
             }
         }
 
-        var oa = new EncounterArea3 { Location = location, Type = Old_Rod, Slots = [.. o] };
-        var ga = new EncounterArea3 { Location = location, Type = Good_Rod, Slots = [.. g] };
-        var sa = new EncounterArea3 { Location = location, Type = Super_Rod, Slots = [.. s] };
+        // If Emerald and Suction Cups / Sticky Hold, a rand(100) >= 15 (85% chance) will hook a Pokémon.
+        // Otherwise, 50% chance to hook a Pokémon.
+        // The 50% is not checked with the 2880 comparison, instead rand() % 2.
+        // Just include the 50 value in the slot data, even though we'll never use it.
+        var oa = new EncounterArea3 { Rate = 50, Location = location, Type = Old_Rod, Slots = [.. o] };
+        var ga = new EncounterArea3 { Rate = 50, Location = location, Type = Good_Rod, Slots = [.. g] };
+        var sa = new EncounterArea3 { Rate = 50, Location = location, Type = Super_Rod, Slots = [.. s] };
         areas.Add(oa);
         areas.Add(ga);
         areas.Add(sa);
     }
 
-    private static void GetArea3(byte[] data, List<EncounterArea3> areas)
+    private static void GetArea3(ReadOnlySpan<byte> data, List<EncounterArea3> areas)
     {
         var location = data[0];
         var HaveGrassSlots = data[1] == 1;

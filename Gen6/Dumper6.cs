@@ -32,8 +32,8 @@ public static class Dumper6
 
         Write(XSlots, "encounter_x.pkl", "xy");
         Write(YSlots, "encounter_y.pkl", "xy");
-        Write(SlotsA, "encounter_a.pkl", "ao");
-        Write(SlotsO, "encounter_o.pkl", "ao");
+        Write(SlotsA, "encounter_as.pkl", "ao");
+        Write(SlotsO, "encounter_or.pkl", "ao");
     }
 
     private static void MarkG6XYSlots(ref EncounterArea6[] Areas)

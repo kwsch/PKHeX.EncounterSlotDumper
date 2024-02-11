@@ -1,3 +1,4 @@
+using System;
 using static PKHeX.EncounterSlotDumper.SlotType1;
 
 namespace PKHeX.EncounterSlotDumper;
@@ -28,7 +29,7 @@ public sealed record EncounterSlot1 : INumberedSlot
     /// <param name="count">Amount of slots to read.</param>
     /// <param name="type">Type of encounter slot table.</param>
     /// <returns>Array of encounter slots.</returns>
-    public static EncounterSlot1[] ReadSlots(byte[] data, ref int ofs, int count, SlotType1 type)
+    public static EncounterSlot1[] ReadSlots(ReadOnlySpan<byte> data, ref int ofs, int count, SlotType1 type)
     {
         var bump = type == Surf ? 4 : 0;
         var slots = new EncounterSlot1[count];
@@ -42,27 +43,4 @@ public sealed record EncounterSlot1 : INumberedSlot
 
         return slots;
     }
-
-    public static readonly EncounterArea1 FishOld_RBY = new()
-    {
-        Location = 0, // Any
-        Type = Old_Rod,
-        Rate = 100,
-        Slots =
-        [
-            new EncounterSlot1(129, 05, 05, 0) // Magikarp
-        ]
-    };
-
-    public static readonly EncounterArea1 FishGood_RBY = new()
-    {
-        Location = 0, // Any
-        Type = Good_Rod,
-        Rate = 100,
-        Slots =
-        [
-            new EncounterSlot1(118, 10, 10, 0), // Goldeen
-            new EncounterSlot1(060, 10, 10, 1) // Poliwag
-        ]
-    };
 }

@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace PKHeX.EncounterSlotDumper;
 
 /// <summary>
@@ -8,11 +11,10 @@ namespace PKHeX.EncounterSlotDumper;
 /// </remarks>
 public sealed record EncounterSlot2
 {
-    public ushort Species { get; private set; }
-    public byte LevelMin { get; private set; }
-    public byte LevelMax { get; private set; }
-
-    public int SlotNumber { get; set; }
+    public ushort Species { get; init; }
+    public byte LevelMin { get; init; }
+    public byte LevelMax { get; init; }
+    public byte SlotNumber { get; }
 
 
     internal EncounterTime Time;
@@ -35,7 +37,7 @@ public sealed record EncounterSlot2
     /// <param name="count">Amount of slots to read.</param>
     /// <param name="type">Type of encounter slot table.</param>
     /// <returns>Array of encounter slots.</returns>
-    public static EncounterSlot2[] ReadSlots(byte[] data, ref int ofs, int count, SlotType2 type)
+    public static EncounterSlot2[] ReadSlots(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] int count, [ConstantExpected] SlotType2 type)
     {
         var bump = type == SlotType2.Surf ? 4 : 0;
         var slots = new EncounterSlot2[count];
@@ -47,13 +49,5 @@ public sealed record EncounterSlot2
             slots[slot] = new EncounterSlot2(species, min, max, (byte)slot);
         }
         return slots;
-    }
-
-    internal void SetAsSpecial(byte species, byte level, EncounterTime time)
-    {
-        Species = species;
-        LevelMin = level;
-        LevelMax = level;
-        Time = time;
     }
 }

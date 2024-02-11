@@ -24,12 +24,9 @@ public static class EncounterUtil
         }
     }
 
-    public static void MarkEncountersStaticMagnetPull(IEnumerable<EncounterArea4> areas, PersonalTable t)
+    public static void MarkEncountersStaticMagnetPull(EncounterArea4 area, PersonalTable t)
     {
-        foreach (var area in areas)
-        {
-            MarkEncountersStaticMagnetPull(area.Slots, t);
-        }
+        MarkEncountersStaticMagnetPull(area.Slots, t);
     }
 
     internal static void MarkEncountersStaticMagnetPullPermutation<T>(IEnumerable<T> grp, PersonalTable t, List<T> permuted)

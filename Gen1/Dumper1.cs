@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using PKHeX.EncounterSlotDumper.Properties;
@@ -24,18 +25,20 @@ public static class Dumper1
         var ylw_fish = EncounterArea1.GetArray1FishingYellow(yf);
 
         foreach (var area in red_gw)
-            area.Location = DumpUtil.RBYLocIndexes[area.Location];
+            area.Location = RBYLocIndexes[area.Location];
         foreach (var area in blu_gw)
-            area.Location = DumpUtil.RBYLocIndexes[area.Location];
+            area.Location = RBYLocIndexes[area.Location];
         foreach (var area in ylw_gw)
-            area.Location = DumpUtil.RBYLocIndexes[area.Location];
+            area.Location = RBYLocIndexes[area.Location];
 
         for (var i = 0; i < rb_fish.Length; i++)
-            rb_fish[i].Location = DumpUtil.RBFishIndexes[i];
+            rb_fish[i].Location = RBFishIndexes[i];
         rb_fish = rb_fish.Where(z => z.Location != 0).ToArray(); // remove duplicate locations (cerulean gym same as cerulean city)
         for (var i = 0; i < ylw_fish.Length; i++)
-            ylw_fish[i].Location = DumpUtil.YFishIndexes[i];
+            ylw_fish[i].Location = YFishIndexes[i];
 
+        rb_fish  = [EncounterArea1.FishOld_RBY, EncounterArea1.FishGood_RBY, .. rb_fish];
+        ylw_fish = [EncounterArea1.FishOld_RBY, EncounterArea1.FishGood_RBY, .. ylw_fish];
         var rb = red_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type).ToArray();
         var bb = blu_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type).ToArray();
         var yb = ylw_gw.Concat(ylw_fish).OrderBy(z => z.Location).ThenBy(z => z.Type).ToArray();
@@ -58,16 +61,17 @@ public static class Dumper1
         var rb_fish = EncounterArea1.GetArray1Fishing(rbf, 33);
 
         foreach (var area in blu_gw)
-            area.Location = DumpUtil.RBYLocIndexes[area.Location];
+            area.Location = RBYLocIndexes[area.Location];
 
         for (var i = 0; i < rb_fish.Length; i++)
-            rb_fish[i].Location = DumpUtil.RBFishIndexes[i];
+            rb_fish[i].Location = RBFishIndexes[i];
         rb_fish = rb_fish.Where(z => z.Location != 0).ToArray(); // remove duplicate locations (cerulean gym same as cerulean city)
 
         return blu_gw.Concat(rb_fish).OrderBy(z => z.Location).ThenBy(z => z.Type);
     }
 
-    public static void Write(IEnumerable<EncounterArea1> area, string name, string ident = "g1")
+    public static void Write(IEnumerable<EncounterArea1> area,
+        [ConstantExpected] string name, [ConstantExpected] string ident = "g1")
     {
         var serialized = area.Select(Write).ToArray();
         List<byte[]> unique = [];
@@ -82,7 +86,8 @@ public static class Dumper1
         Console.WriteLine($"Wrote {name} with {unique.Count} unique tables (originally {serialized.Length}).");
     }
 
-    public static void Write(IEnumerable<EncounterArea1> other, IEnumerable<EncounterArea1> revised, string name, string ident = "g1")
+    public static void Write(IEnumerable<EncounterArea1> other, IEnumerable<EncounterArea1> revised,
+        [ConstantExpected] string name, [ConstantExpected] string ident = "g1")
     {
         var serializedOther = other.Select(Write).ToArray();
         var serializedRevised = revised.Select(Write).ToArray();
@@ -107,7 +112,8 @@ public static class Dumper1
         Console.WriteLine($"Wrote {name} with {clean.Count} unique tables (originally {serializedRevised.Length}).");
     }
 
-    private static void PackUnique(List<byte[]> unique, string name, string ident)
+    private static void PackUnique(List<byte[]> unique,
+        [ConstantExpected] string name, [ConstantExpected] string ident)
     {
         var packed = BinLinker.Pack([.. unique], ident);
         File.WriteAllBytes(name, packed);
@@ -135,4 +141,51 @@ public static class Dumper1
         bw.Write((byte)slot.LevelMin);
         bw.Write((byte)slot.LevelMax);
     }
+
+    // FR/LG location indexes, since they are a superset of RBY.
+    private static ReadOnlySpan<byte> RBYLocIndexes =>
+    [
+        088, 089, 090, 091, 092, 093, 094, 095, 096, 097,
+        098, 000, 101, 102, 103, 104, 105, 106, 107, 108,
+        109, 110, 111, 112, 113, 114, 115, 116, 117, 118,
+        119, 120, 121, 122, 123, 124, 125, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 126, 000, 000, 000, 000, 000, 000, 000, 127,
+        127, 127, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 138, 142, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 132, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 140, 140, 140, 140, 140, 140, 140, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 139,
+        139, 139, 139, 000, 000, 135, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 139, 000, 132, 000, 000, 131, 132, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 135, 135, 135, 136, 136, 136,
+        136, 000, 000, 000, 000, 000, 141, 141, 141, 000,
+        000, 000, 138, 000, 000, 000, 000, 000, 000, 000,
+        000, 000, 000, 000, 000, 000, 000, 000, 000, 000,
+    ];
+
+    private static ReadOnlySpan<byte> RBFishIndexes =>
+    [
+        // Dummy out duplicate groups with same met location
+        088, 089, 091, 093, 094, 095, 096, 104, 106, 110,
+        111, 112, 113, 117, 118, 119, 120, 121, 122, 123,
+        124, 125,   0,   0, 139,   0, 136,   0,   0,   0,
+        141,   0,   0
+    ];
+
+    private static ReadOnlySpan<byte> YFishIndexes =>
+    [
+        088, 089, 091, 093, 094, 095, 096, 104, 106, 124,
+        125, 110, 111, 112, 113, 117, 118, 119, 120, 121,
+        122, 123, 093, 136, 136, 136, 136, 139, 139, 141,
+        141
+    ];
 }

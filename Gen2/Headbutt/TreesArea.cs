@@ -48,7 +48,7 @@ public sealed class TreesArea
         return result;
     }
 
-    private TreesArea(byte[] entry)
+    private TreesArea(ReadOnlySpan<byte> entry)
     {
         // Coordinates of trees were obtained with the program G2Map
         // ValidTrees are those accessible by the player
@@ -94,20 +94,20 @@ public sealed class TreesArea
         }
     }
 
-    private static TreeEncounterAvailable GetIsAvailableModerate(byte[] moderate, byte[] valid, byte[] invalid)
+    private static TreeEncounterAvailable GetIsAvailableModerate(ReadOnlySpan<byte> moderate, ReadOnlySpan<byte> valid, ReadOnlySpan<byte> invalid)
     {
-        if (valid.Any(moderate.Contains))
+        if (valid.ContainsAny(moderate))
             return TreeEncounterAvailable.ValidTree;
-        if (invalid.Any(moderate.Contains))
+        if (invalid.ContainsAny(moderate))
             return TreeEncounterAvailable.InvalidTree;
         return TreeEncounterAvailable.Impossible;
     }
 
-    private static TreeEncounterAvailable GetIsAvailableLow(byte[] moderate, byte[] valid, byte[] invalid)
+    private static TreeEncounterAvailable GetIsAvailableLow(ReadOnlySpan<byte> moderate, ReadOnlySpan<byte> valid, ReadOnlySpan<byte> invalid)
     {
-        if (valid.Except(moderate).Any())
+        if (valid.ContainsAnyExcept(moderate))
             return TreeEncounterAvailable.ValidTree;
-        if (invalid.Except(moderate).Any())
+        if (invalid.ContainsAnyExcept(moderate))
             return TreeEncounterAvailable.InvalidTree;
         return TreeEncounterAvailable.Impossible;
     }

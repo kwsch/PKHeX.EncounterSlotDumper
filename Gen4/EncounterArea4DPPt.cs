@@ -59,12 +59,15 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         }
 
         area.Slots = [.. slots];
-        EncounterUtil.MarkEncountersStaticMagnetPull(new [] {area}, PersonalTable.HGSS);
+        EncounterUtil.MarkEncountersStaticMagnetPull(area, PersonalTable.HGSS); // same as DPPt personal
     }
 
     private static IEnumerable<EncounterArea4DPPt> GetArea4DPPt(byte[] data, bool pt = false)
     {
         var location = BitConverter.ToUInt16(data, 0x00);
+        if (location > byte.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(location), "Location ID is too large.");
+
         var GrassRate = BitConverter.ToInt32(data, 0x02);
         if (GrassRate > 0)
         {
@@ -132,7 +135,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
             yield return new EncounterArea4DPPt
             {
                 Type = Grass,
-                Location = location,
+                Location = (byte)location,
                 Rate = (byte)GrassRate,
                 Slots = [.. slots], 
             };
@@ -141,7 +144,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         var SurfRate = BitConverter.ToInt32(data, 0xCE);
         if (SurfRate > 0)
         {
-            var area = new EncounterArea4DPPt {Location = location,
+            var area = new EncounterArea4DPPt {Location = (byte)location,
                 Type = Surf,
                 Rate = (byte)SurfRate,
                 Slots = [],
@@ -155,7 +158,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         var OldRate = BitConverter.ToInt32(data, 0x126);
         if (OldRate > 0)
         {
-            var area = new EncounterArea4DPPt { Location = location, 
+            var area = new EncounterArea4DPPt { Location = (byte)location, 
                 Type = Old_Rod,
                 Rate = (byte)OldRate,
                 Slots = [],
@@ -167,7 +170,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         var GoodRate = BitConverter.ToInt32(data, 0x152);
         if (GoodRate > 0)
         {
-            var area = new EncounterArea4DPPt {Location = location,
+            var area = new EncounterArea4DPPt {Location = (byte)location,
                 Type = Good_Rod, 
                 Rate = (byte)GoodRate,
                 Slots = [],
@@ -179,7 +182,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         var SuperRate = BitConverter.ToInt32(data, 0x17E);
         if (SuperRate > 0)
         {
-            var area = new EncounterArea4DPPt {Location = location, 
+            var area = new EncounterArea4DPPt {Location = (byte)location, 
                 Type = Super_Rod, 
                 Rate = (byte)SuperRate,
                 Slots = [],

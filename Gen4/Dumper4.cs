@@ -30,8 +30,6 @@ public static class Dumper4
         var HG_Slots = EncounterArea4HGSS.GetArray4HGSS(BinLinker.Unpack(hg, "hg"));
         var SS_Slots = EncounterArea4HGSS.GetArray4HGSS(BinLinker.Unpack(ss, "ss"));
 
-        var DP_Feebas = GetFeebasArea(D_Slots[55], D_Slots[56], D_Slots[57]);
-        var Pt_Feebas = GetFeebasArea(Pt_Slots[55], Pt_Slots[56], Pt_Slots[57]);
         var HG_Headbutt_Slots = EncounterArea4HGSS.GetArray4HGSS_Headbutt(BinLinker.Unpack(hb_hg, "hg"));
         var SS_Headbutt_Slots = EncounterArea4HGSS.GetArray4HGSS_Headbutt(BinLinker.Unpack(hb_ss, "ss"));
 
@@ -44,6 +42,8 @@ public static class Dumper4
 
         MarkEncounterTypeData(D_Slots, P_Slots, Pt_Slots, HG_Slots, SS_Slots);
 
+        var DP_Feebas = GetFeebasArea(D_Slots[55], D_Slots[56], D_Slots[57]);
+        var Pt_Feebas = GetFeebasArea(Pt_Slots[55], Pt_Slots[56], Pt_Slots[57]);
         EncounterArea4DPPt[] SlotsD  = [..D_Slots,  ..D_HoneyTrees_Slots,  ..DP_Feebas];
         EncounterArea4DPPt[] SlotsP  = [..P_Slots,  ..P_HoneyTrees_Slots,  ..DP_Feebas];
         EncounterArea4DPPt[] SlotsPt = [..Pt_Slots, ..Pt_HoneyTrees_Slots, ..Pt_Feebas];
@@ -122,6 +122,8 @@ public static class Dumper4
 
     private static readonly EncounterArea4DPPt SlotsPt_HoneyTree = new()
     {
+        Location = 0,
+        Rate = 0,
         Type = HoneyTree,
         Slots =
         [
@@ -137,6 +139,8 @@ public static class Dumper4
 
     private static readonly EncounterArea4DPPt SlotsD_HoneyTree = new()
     {
+        Location = 0,
+        Rate = 0,
         Type = HoneyTree,
         Slots =
         [
@@ -147,6 +151,8 @@ public static class Dumper4
 
     private static readonly EncounterArea4DPPt SlotsP_HoneyTree = new()
     {
+        Location = 0,
+        Rate = 0,
         Type = HoneyTree,
         Slots =
         [
@@ -166,23 +172,22 @@ public static class Dumper4
         Debug.Assert(areas[0].Type == Old_Rod);
         Debug.Assert(areas[1].Type == Good_Rod);
         Debug.Assert(areas[2].Type == Super_Rod);
+
+        foreach (var area in areas)
+            area.Rate = byte.MaxValue; // Tag for Feebas handling.
 #endif
         var result = new EncounterArea4DPPt[3];
         for (int i = 0; i < result.Length; i++)
         {
-            var template = areas[i];
-            var slots = template.Slots.ToArray();
-            for (var j = 0; j < slots.Length; j++)
-                slots[j] = slots[j] with { Species = (int)Species.Feebas };
+            // Feebas replaces the encounter slot species.
+            var temp = areas[i];
+            var tSlots = temp.Slots;
 
-            var area = new EncounterArea4DPPt
-            {
-                Location = template.Location,
-                Type = template.Type,
-                TypeEncounter = Surfing_Fishing,
-                Slots = slots,
-            };
-            result[i] = area;
+            var slots = new EncounterSlot4[tSlots.Length];
+            for (var j = 0; j < slots.Length; j++)
+                slots[j] = new() { Species = (int)Species.Feebas, LevelMin = 10, LevelMax = 20, SlotNumber = (byte)i };
+
+            result[i] = temp with { Slots = slots };
         }
 
         return result;
@@ -320,7 +325,7 @@ public static class Dumper4
             if (extra.Count == 0)
                 throw new Exception();
 
-            area.Slots = [.. area.Slots.Concat(extra).OrderBy(z => z.SlotNumber)];
+            area.Slots = [.. area.Slots, ..extra];
         }
     }
 
@@ -341,13 +346,11 @@ public static class Dumper4
 
     // Gen 4 raw encounter data does not contain info for alt slots
     // Shellos and Gastrodon East Sea form should be modified
-    private static void MarkG4AltFormSlots(IEnumerable<EncounterArea4> areas, ushort Species, byte form, ReadOnlySpan<byte> locations)
+    private static void MarkG4AltFormSlots(IEnumerable<EncounterArea4> areas, [ConstantExpected] ushort Species, [ConstantExpected] byte form, ReadOnlySpan<byte> locations)
     {
         foreach (var area in areas)
         {
-            if (area.Location > byte.MaxValue)
-                continue;
-            if (!locations.Contains((byte)area.Location)) 
+            if (!locations.Contains(area.Location)) 
                 continue;
             foreach (var slot in area.Slots)
             {
@@ -401,127 +404,141 @@ public static class Dumper4
         _ => None
     };
 
-    private static void MarkDPPtEncounterTypeSlots_MultipleTypes<T>(T[] Areas, [ConstantExpected] ushort Location, 
-        EncounterType NormalEncounterType, params int[] tallGrassAreaIndexes)
-        where T : EncounterArea4
+    private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4DPPt[] areas, [ConstantExpected] byte location,
+        EncounterType normalEncounterType, ReadOnlySpan<byte> tallGrassAreaIndexes)
     {
-        var numfile = 0;
-        var areas = Areas.Where(x => x.Location == Location).ToArray();
-        foreach (var area in areas)
+        byte numfile = 0;
+        var iterate = areas.Where(x => x.Location == location);
+        foreach (var area in iterate)
         {
-            var GrassType = tallGrassAreaIndexes.Contains(numfile) ? TallGrass : NormalEncounterType;
+            var GrassType = tallGrassAreaIndexes.Contains(numfile) ? TallGrass : normalEncounterType;
             area.TypeEncounter = GetEncounterTypeBySlotDPPt(area.Type, GrassType);
             numfile++;
         }
     }
 
-    private static void MarkHGSSEncounterTypeSlots_MultipleTypes(EncounterArea4HGSS[] Areas, ushort Location, EncounterType NormalEncounterType, params int[] tallGrassAreaIndexes)
+    private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4DPPt[] areas, [ConstantExpected] byte location, 
+        EncounterType normalEncounterType, params byte[] tallGrassAreaIndexes)
+    {
+        ReadOnlySpan<byte> span = tallGrassAreaIndexes;
+        MarkDPPtEncounterTypeSlots_MultipleTypes(areas, location, normalEncounterType, span);
+    }
+
+    private static void MarkHGSSEncounterTypeSlots_MultipleTypes(EncounterArea4HGSS[] Areas, [ConstantExpected] byte location,
+        EncounterType normalEncounterType, ReadOnlySpan<byte> tallGrassAreaIndexes)
     {
         // Area with two different encounter type for grass encounters
         // SpecialEncounterFile is tall grass encounter type, the other files have the normal encounter type for this location
-        var HeadbuttType = GetHeadbuttEncounterType(Location);
-        var numfile = 0;
-        var areas = Areas.Where(x => x.Location == Location).ToArray();
-        foreach (var area in areas)
+        var HeadbuttType = GetHeadbuttEncounterType(location);
+        byte numfile = 0;
+        var iterate = Areas.Where(x => x.Location == location);
+        foreach (var area in iterate)
         {
-            var GrassType = tallGrassAreaIndexes.Contains(numfile) ? TallGrass : NormalEncounterType;
+            var GrassType = tallGrassAreaIndexes.Contains(numfile) ? TallGrass : normalEncounterType;
             area.TypeEncounter = GetEncounterTypeBySlotHGSS(area.Type, GrassType, HeadbuttType);
             numfile++;
         }
     }
 
-    private static void MarkSpecific(EncounterArea4HGSS[] Areas, ushort Location, SlotType4 t, EncounterType val)
+    private static void MarkHGSSEncounterTypeSlots_MultipleTypes(EncounterArea4HGSS[] Areas, [ConstantExpected] byte Location,
+        EncounterType normalEncounterType, params byte[] tallGrassAreaIndexes)
+    {
+        ReadOnlySpan<byte> span = tallGrassAreaIndexes;
+        MarkHGSSEncounterTypeSlots_MultipleTypes(Areas, Location, normalEncounterType, span);
+    }
+
+    private static void MarkSpecific(EncounterArea4HGSS[] Areas, byte Location, SlotType4 t, EncounterType val)
     {
         var areas = Areas.Where(x => x.Location == Location && x.Type == t);
         foreach (var area in areas)
             area.TypeEncounter = val;
     }
 
-    private static void MarkDPPtEncounterTypeSlots(EncounterArea4DPPt[] Areas)
+    private static void MarkDPPtEncounterTypeSlots(EncounterArea4DPPt[] areas)
     {
-        foreach (var Area in Areas)
+        foreach (var area in areas)
         {
-            if (DPPt_MixInteriorExteriorLocations.Contains(Area.Location))
+            if (DPPt_MixInteriorExteriorLocations.Contains(area.Location))
                 continue;
 
-            var GrassType = GetGrassType(Area.Location);
+            var grassType = GetGrassType(area.Location);
 
-            EncounterType GetGrassType(ushort location)
+            static EncounterType GetGrassType(byte location)
             {
                 if (location == 70) // Old Chateau
                     return Building_EnigmaStone;
-                if (DPPt_CaveLocations.Contains(Area.Location))
+                if (DPPt_CaveLocations.Contains(location))
                     return Cave_HallOfOrigin;
                 return TallGrass;
             }
 
-            if (Area.TypeEncounter == None) // not defined yet
+            if (area.TypeEncounter == None) // not defined yet
             {
-                if (Area.Location == 52) // Great Marsh
-                    Area.TypeEncounter = Area.Type == Grass ? MarshSafari : Surfing_Fishing;
+                if (area.Location == 52) // Great Marsh
+                    area.TypeEncounter = area.Type == Grass ? MarshSafari : Surfing_Fishing;
                 else
-                    Area.TypeEncounter = GetEncounterTypeBySlotDPPt(Area.Type, GrassType);
+                    area.TypeEncounter = GetEncounterTypeBySlotDPPt(area.Type, grassType);
             }
         }
     }
 
-    private static EncounterType GetHeadbuttEncounterType(ushort Location)
+    private static EncounterType GetHeadbuttEncounterType(byte location)
     {
-        if (Location == 195) // Route 47 -- one tree accessible via Water tile
+        if (location == 195) // Route 47 -- one tree accessible via Water tile
             return DialgaPalkia | TallGrass | Surfing_Fishing;
-        if (Location == 196) // Route 48
+        if (location == 196) // Route 48
             return DialgaPalkia | TallGrass;
 
         // Routes with trees adjacent to water tiles
-        var allowsurf = HGSS_SurfingHeadbutt_Locations.Contains(Location);
+        var allowSurf = HGSS_SurfingHeadbutt_Locations.Contains(location);
 
         // Cities
-        if (HGSS_CityLocations.Contains(Location))
+        if (HGSS_CityLocations.Contains(location))
         {
-            return allowsurf
+            return allowSurf
                 ? Building_EnigmaStone | Surfing_Fishing
                 : Building_EnigmaStone;
         }
 
         // Caves with no exterior zones
-        if (!HGSS_MixInteriorExteriorLocations.Contains(Location) && HGSS_CaveLocations.Contains(Location))
+        if (!HGSS_MixInteriorExteriorLocations.Contains(location) && HGSS_CaveLocations.Contains(location))
         {
-            return allowsurf
+            return allowSurf
                 ? Cave_HallOfOrigin | Surfing_Fishing
                 : Cave_HallOfOrigin;
         }
 
         // Routes and exterior areas
         // Routes with trees adjacent to grass tiles
-        var allowgrass = HGSS_GrassHeadbutt_Locations.Contains(Location);
-        if (allowgrass)
+        var allowGrass = HGSS_GrassHeadbutt_Locations.Contains(location);
+        if (allowGrass)
         {
-            return allowsurf
+            return allowSurf
                 ? TallGrass | Surfing_Fishing
                 : TallGrass;
         }
 
-        return allowsurf
+        return allowSurf
             ? Surfing_Fishing
             : None;
     }
 
-    public static void MarkHGSSEncounterTypeSlots(IEnumerable<EncounterArea4> Areas)
+    public static void MarkHGSSEncounterTypeSlots(IEnumerable<EncounterArea4> areas)
     {
-        foreach (var Area in Areas)
+        foreach (var area in areas)
         {
-            if (HGSS_MixInteriorExteriorLocations.Contains(Area.Location))
+            if (HGSS_MixInteriorExteriorLocations.Contains(area.Location))
                 continue;
-            var GrassType = HGSS_CaveLocations.Contains(Area.Location) ? Cave_HallOfOrigin : TallGrass;
-            var HeadbuttType = GetHeadbuttEncounterType(Area.Location);
+            var GrassType = HGSS_CaveLocations.Contains(area.Location) ? Cave_HallOfOrigin : TallGrass;
+            var HeadbuttType = GetHeadbuttEncounterType(area.Location);
 
-            if (Area.TypeEncounter == None) // not defined yet
-                Area.TypeEncounter = GetEncounterTypeBySlotHGSS(Area.Type, GrassType, HeadbuttType);
+            if (area.TypeEncounter == None) // not defined yet
+                area.TypeEncounter = GetEncounterTypeBySlotHGSS(area.Type, GrassType, HeadbuttType);
         }
     }
 
     #region Encounter Types
-    private static readonly HashSet<int> DPPt_CaveLocations =
+    private static ReadOnlySpan<byte> DPPt_CaveLocations =>
     [
         46, // Oreburgh Mine
         50, // Mt. Coronet
@@ -539,14 +556,14 @@ public static class Dumper4
         84, // Stark Mountain
     ];
 
-    private static ReadOnlySpan<ushort> DPPt_MixInteriorExteriorLocations =>
+    private static ReadOnlySpan<byte> DPPt_MixInteriorExteriorLocations =>
     [
         24, // Route 209 (Lost Tower)
         50, // Mt Coronet
         84, // Stark Mountain
     ];
 
-    private static readonly int[] DPPt_MtCoronetExteriorEncounters =
+    private static ReadOnlySpan<byte> DPPt_MtCoronetExteriorEncounters =>
     [
         7, 8
     ];
@@ -554,7 +571,7 @@ public static class Dumper4
     /// <summary>
     /// Locations with headbutt trees accessible from Cave tiles
     /// </summary>
-    private static ReadOnlySpan<ushort> HGSS_CaveLocations =>
+    private static ReadOnlySpan<byte> HGSS_CaveLocations =>
     [
         197, // DIGLETT's Cave
         198, // Mt. Moon
@@ -583,7 +600,7 @@ public static class Dumper4
     /// <summary>
     /// Locations with headbutt trees accessible from city tiles
     /// </summary>
-    private static readonly HashSet<int> HGSS_CityLocations =
+    private static ReadOnlySpan<byte> HGSS_CityLocations =>
     [
         126, // New Bark Town
         127, // Cherrygrove City
@@ -612,7 +629,7 @@ public static class Dumper4
     /// <summary>
     /// Locations with headbutt trees accessible from water tiles
     /// </summary>
-    private static readonly HashSet<int> HGSS_SurfingHeadbutt_Locations =
+    private static ReadOnlySpan<byte> HGSS_SurfingHeadbutt_Locations =>
     [
         126, // New Bark Town
         127, // Cherrygrove City
@@ -642,7 +659,7 @@ public static class Dumper4
     /// <summary>
     /// Locations with headbutt trees accessible from tall grass tiles
     /// </summary>
-    private static readonly HashSet<int> HGSS_GrassHeadbutt_Locations =
+    private static ReadOnlySpan<byte> HGSS_GrassHeadbutt_Locations =>
     [
         137, // Mt. Silver
         149, // Route 1
@@ -681,12 +698,12 @@ public static class Dumper4
         224, // Viridian Forest
     ];
 
-    private static readonly int[] HGSS_MtSilverCaveExteriorEncounters =
+    private static ReadOnlySpan<byte> HGSS_MtSilverCaveExteriorEncounters =>
     [
         5, 10
     ];
 
-    private static readonly int[] HGSS_MixInteriorExteriorLocations =
+    private static ReadOnlySpan<byte> HGSS_MixInteriorExteriorLocations =>
     [
         209, // Ruins of Alph
         219, // Mt. Silver Cave

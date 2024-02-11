@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace PKHeX.EncounterSlotDumper;
 
@@ -151,10 +152,10 @@ public static class Sand1
         File.WriteAllBytes(fileName + "fix", data);
     }
 
-    private static void GetEncounters(byte[] data, int offset, string name)
+    private static void GetEncounters(ReadOnlySpan<byte> data, int offset, string name)
     {
         var areaptr = new List<int>();
-        while (BitConverter.ToUInt16(data, offset) != 0xFFFF)
+        while (ReadUInt16LittleEndian(data[offset..]) != 0xFFFF)
         {
             areaptr.Add((data[offset + 1] << 8) | data[offset] | 0x8000);
             offset += 2;
@@ -238,7 +239,6 @@ public static class Sand1
     private static void GetLVLEvo(byte[] data, int ofs, string name)
     {
         int i = 0;
-        int max = indexes.Max() + 1;
         byte[][] evos = new byte[152][];
         evos[0] = new byte[1];
         byte[][] learnsets = new byte[152][];
@@ -319,7 +319,10 @@ public static class Sand1
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00
     ];
-    private static readonly int[] indexes =
+
+    private const byte max = 190;
+
+    private static ReadOnlySpan<byte> indexes =>
     [
         112, 115, 032, 035, 021, 100, 034, 080, 002, 103, 108, 102, 088, 094, 029, 031, 104, 111, 131, 059, 151, 130,
         090, 072, 092, 123, 120, 009, 127, 114, 152, 153, 058, 095, 022, 016, 079, 064, 075, 113, 067, 122, 106, 107,
