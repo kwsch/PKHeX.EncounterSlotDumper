@@ -196,23 +196,15 @@ public sealed record EncounterArea4DPPt : EncounterArea4
     {
         // Occupy Slots 6 & 7
         var species = pt ? Encounters4.MarshPt : Encounters4.MarshDP;
-        ReadOnlySpan<byte> levelRanges = pt ? [27, 30] : [22, 22, 24, 24, 26, 26];
 
         var replace = new List<EncounterSlot4>();
+        var s6 = regular[0][0];
+        var s7 = regular[0][1];
         foreach (var s in species)
         {
-            // Replace species as well as the level range.
-            for (int i = 0; i < levelRanges.Length; i += 2)
-            {
-                var min = levelRanges[i];
-                var max = levelRanges[i + 1];
-
-                var s6 = regular[0][0] with { Species = s, LevelMin = min, LevelMax = max };
-                replace.Add(s6);
-
-                var s7 = regular[0][1] with { Species = s, LevelMin = min, LevelMax = max };
-                replace.Add(s7);
-            }
+            // Retain existing level ranges.
+            replace.Add(s6 with { Species = s });
+            replace.Add(s7 with { Species = s });
         }
         AddReplacedArea(regular, slots, replace);
     }
@@ -222,14 +214,13 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         // Occupy Slots 6 & 7
         var species = pt ? Encounters4.TrophyPt : Encounters4.TrophyDP;
         var replace = new List<EncounterSlot4>();
+        var s6 = regular[0][0];
+        var s7 = regular[0][1];
         foreach (var s in species)
         {
             // Retain existing level ranges.
-            var slot = regular[0][0] with { Species = s };
-            replace.Add(slot);
-
-            slot = regular[0][1] with { Species = s };
-            replace.Add(slot);
+            replace.Add(s6 with { Species = s });
+            replace.Add(s7 with { Species = s });
         }
         AddReplacedArea(regular, slots, replace);
     }
