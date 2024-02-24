@@ -48,25 +48,19 @@ public static class CsvConverter
 
     private class BooleanConverter : JsonConverter<bool>
     {
-        public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        // Allow reading "true" and "false" as boolean values.
+        public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => reader.TokenType switch
         {
-            switch (reader.TokenType)
+            JsonTokenType.True => true,
+            JsonTokenType.False => false,
+            JsonTokenType.String => reader.GetString() switch
             {
-                case JsonTokenType.True:
-                    return true;
-                case JsonTokenType.False:
-                    return false;
-                case JsonTokenType.String:
-                    return reader.GetString() switch
-                    {
-                        "true" => true,
-                        "false" => false,
-                        _ => throw new JsonException()
-                    };
-                default:
-                    throw new JsonException();
-            }
-        }
+                "true" => true,
+                "false" => false,
+                _ => throw new JsonException()
+            },
+            _ => throw new JsonException()
+        };
 
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
         {
