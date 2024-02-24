@@ -250,6 +250,12 @@
   <data name="encounter_yellow_f" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gen1\encounter_yellow_f.pkl;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="event1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen1\event1.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
+  </data>
+  <data name="event2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gen2\event2.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
+  </data>
   <data name="personal_e" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\personal_e;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

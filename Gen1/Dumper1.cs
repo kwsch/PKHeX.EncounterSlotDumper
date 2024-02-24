@@ -11,6 +11,8 @@ public static class Dumper1
 {
     public static void DumpGen1()
     {
+        Event1.DumpGen1();
+
         var r = Resources.encounter_red;
         var b = Resources.encounter_blue;
         var y = Resources.encounter_yellow;

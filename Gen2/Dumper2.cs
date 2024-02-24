@@ -11,6 +11,8 @@ public static class Dumper2
 {
     public static void DumpGen2()
     {
+        Event2.DumpGen2();
+
         var g = Resources.encounter_gold;
         var s = Resources.encounter_silver;
         var c = Resources.encounter_crystal;
