@@ -40,7 +40,7 @@ public abstract record EncounterArea4
             if ((short)species <= 0 || baseSlot.Species == species) // Empty or duplicate
                 continue;
 
-            var slot = baseSlot with { Species = species, SlotNumber = (byte)i };
+            var slot = baseSlot with { Species = species };
             slots.Add(slot);
         }
         return slots;
