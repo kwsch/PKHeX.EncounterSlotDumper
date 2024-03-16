@@ -244,11 +244,13 @@ public static class Dumper4
         58, // Floaroma Meadow
     ];
 
+    private const byte RuinsOfAlph = 209;
+    private const byte MtSilverCave = 219;
     private static ReadOnlySpan<byte> MetLocationSolaceonRuins => [53];
     private static ReadOnlySpan<byte> MetLocationRuinsOfAlph => [209];
 
     private static void MarkEncounterTypeData(EncounterArea4DPPt[] D_Slots, EncounterArea4DPPt[] P_Slots,
-        EncounterArea4DPPt[] Pt_Slots, 
+        EncounterArea4DPPt[] Pt_Slots,
         EncounterArea4HGSS[] HG_Slots, EncounterArea4HGSS[] SS_Slots)
     {
         // Shellos & Gastrodon
@@ -268,8 +270,6 @@ public static class Dumper4
         const byte Route209 = 24;
         const byte StarkMountain = 84;
         const byte MtCoronet = 50;
-        const byte RuinsOfAlph = 209;
-        const byte MtSilver = 219;
         const byte Cianwood = 130;
         MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, Route209, Building_EnigmaStone, 0); // Exterior slots (Starly); not Lost Tower tables.
         MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, Route209, Building_EnigmaStone, 0); // Exterior slots (Starly); not Lost Tower tables.
@@ -280,14 +280,14 @@ public static class Dumper4
         MarkDPPtEncounterTypeSlots_MultipleTypes(D_Slots, MtCoronet, Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
         MarkDPPtEncounterTypeSlots_MultipleTypes(P_Slots, MtCoronet, Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
         MarkDPPtEncounterTypeSlots_MultipleTypes(Pt_Slots, MtCoronet, Cave_HallOfOrigin, DPPt_MtCoronetExteriorEncounters); // Snover land slots
-        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, RuinsOfAlph, Cave_HallOfOrigin, 0, 1, 2, 3, 4, 5); // Alph Exterior (not Unown)
-        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, RuinsOfAlph, Cave_HallOfOrigin, 0, 1, 2, 3, 4, 5); // Alph Exterior (not Unown)
-        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilver, Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
-        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilver, Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
 
-        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, Cianwood, RockSmash);
-        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, Cianwood, RockSmash);
+        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, RuinsOfAlph, Cave_HallOfOrigin, [0, 1, 2, 3, 4, 5]); // Alph Exterior (not Unown)
+        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, RuinsOfAlph, Cave_HallOfOrigin, [0, 1, 2, 3, 4, 5]); // Alph Exterior (not Unown)
+        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilverCave, Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
+        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilverCave, Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
 
+        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, Cianwood, RockSmash, ReadOnlySpan<byte>.Empty);
+        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, Cianwood, RockSmash, ReadOnlySpan<byte>.Empty);
         MarkSpecific(HG_Slots, RuinsOfAlph, Rock_Smash, DialgaPalkia);
         MarkSpecific(SS_Slots, RuinsOfAlph, Rock_Smash, DialgaPalkia);
     }
@@ -329,20 +329,17 @@ public static class Dumper4
         }
     }
 
-    private static int[] GetSwarmSlotIndexes(SlotType4 type)
+    private static ReadOnlySpan<byte> GetSwarmSlotIndexes(SlotType4 type) => type switch
     {
-        return type switch
-        {
-            // Grass Swarm slots replace slots 0 and 1 from encounters data
-            Grass => [0, 1],
-            // for surfing only replace slots 0 from encounters data
-            Surf => [0],
-            Old_Rod => [2],
-            Good_Rod => [0, 2, 3],
-            Super_Rod => [0, 1, 2, 3, 4], // all
-            _ => throw new Exception()
-        };
-    }
+        // Grass Swarm slots replace slots 0 and 1 from encounters data
+        Grass => [0, 1],
+        // for surfing only replace slots 0 from encounters data
+        Surf => [0],
+        Old_Rod => [2],
+        Good_Rod => [0, 2, 3],
+        Super_Rod => [0, 1, 2, 3, 4], // all
+        _ => throw new Exception(),
+    };
 
     // Gen 4 raw encounter data does not contain info for alt slots
     // Shellos and Gastrodon East Sea form should be modified
@@ -350,11 +347,11 @@ public static class Dumper4
     {
         foreach (var area in areas)
         {
-            if (!locations.Contains(area.Location)) 
+            if (!locations.Contains(area.Location))
                 continue;
             foreach (var slot in area.Slots)
             {
-                if (slot.Species == Species) 
+                if (slot.Species == Species)
                     slot.Form = form;
             }
         }
@@ -401,7 +398,7 @@ public static class Dumper4
         Safari_Good_Rod => Surfing_Fishing,
         Safari_Super_Rod => Surfing_Fishing,
 
-        _ => None
+        _ => None,
     };
 
     private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4DPPt[] areas, [ConstantExpected] byte location,
@@ -440,18 +437,13 @@ public static class Dumper4
         }
     }
 
-    private static void MarkHGSSEncounterTypeSlots_MultipleTypes(EncounterArea4HGSS[] Areas, [ConstantExpected] byte Location,
-        EncounterType normalEncounterType, params byte[] tallGrassAreaIndexes)
+    private static void MarkSpecific(ReadOnlySpan<EncounterArea4HGSS> areas, byte Location, SlotType4 t, EncounterType val)
     {
-        ReadOnlySpan<byte> span = tallGrassAreaIndexes;
-        MarkHGSSEncounterTypeSlots_MultipleTypes(Areas, Location, normalEncounterType, span);
-    }
-
-    private static void MarkSpecific(EncounterArea4HGSS[] Areas, byte Location, SlotType4 t, EncounterType val)
-    {
-        var areas = Areas.Where(x => x.Location == Location && x.Type == t);
         foreach (var area in areas)
-            area.TypeEncounter = val;
+        {
+            if (area.Location == Location && area.Type == t)
+                area.TypeEncounter = val;
+        }
     }
 
     private static void MarkDPPtEncounterTypeSlots(EncounterArea4DPPt[] areas)
@@ -523,18 +515,22 @@ public static class Dumper4
             : None;
     }
 
-    public static void MarkHGSSEncounterTypeSlots(IEnumerable<EncounterArea4> areas)
+    public static void MarkHGSSEncounterTypeSlots(ReadOnlySpan<EncounterArea4HGSS> areas)
     {
         foreach (var area in areas)
         {
             if (HGSS_MixInteriorExteriorLocations.Contains(area.Location))
-                continue;
+                continue; // Handled earlier
             var GrassType = HGSS_CaveLocations.Contains(area.Location) ? Cave_HallOfOrigin : TallGrass;
             var HeadbuttType = GetHeadbuttEncounterType(area.Location);
 
             if (area.TypeEncounter == None) // not defined yet
                 area.TypeEncounter = GetEncounterTypeBySlotHGSS(area.Type, GrassType, HeadbuttType);
         }
+
+        // Handle skipped cases that were not previously covered
+        MarkSpecific(areas, MtSilverCave, Headbutt, TallGrass | None);
+        // RuinsOfAlph has no headbutt
     }
 
     #region Encounter Types
@@ -705,8 +701,8 @@ public static class Dumper4
 
     private static ReadOnlySpan<byte> HGSS_MixInteriorExteriorLocations =>
     [
-        209, // Ruins of Alph
-        219, // Mt. Silver Cave
+        RuinsOfAlph, // Ruins of Alph
+        MtSilverCave, // Mt. Silver Cave
     ];
 
     private record SwarmDef(short Location, ushort Species, SlotType4 Type, byte TableIndex = 0)

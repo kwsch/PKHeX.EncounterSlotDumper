@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using PKHeX.EncounterSlotDumper.Properties;
@@ -35,8 +34,8 @@ public static class Dumper3
         var sd = sa.Concat(new[] { FishFeebas }).OrderBy(z => z.Location).ThenBy(z => z.Type);
         var ed = em.Concat(new[] { FishFeebas }).OrderBy(z => z.Location).ThenBy(z => z.Type);
 
-        var fd = fr.Concat(SlotsFRLGUnown).OrderBy(z => z.Location).ThenBy(z => z.Type);
-        var ld = lg.Concat(SlotsFRLGUnown).OrderBy(z => z.Location).ThenBy(z => z.Type);
+        var fd = fr.OrderBy(z => z.Location).ThenBy(z => z.Type);
+        var ld = lg.OrderBy(z => z.Location).ThenBy(z => z.Type);
 
         Write(rd, "encounter_r.pkl", "ru");
         Write(sd, "encounter_s.pkl", "sa");
@@ -191,29 +190,4 @@ public static class Dumper3
             new EncounterSlot3 {Species = 349, LevelMin = 20, LevelMax = 25} // Feebas with any Rod (50%)
         ],
     };
-
-    private static readonly EncounterArea3[] SlotsFRLGUnown =
-    [
-        GetUnownArea(188, [ 00,00,00,00,00,00,00,00,00,00,00,27 ]), // 188 = Monean Chamber
-        GetUnownArea(189, [ 02,02,02,03,03,03,07,07,07,20,20,14 ]), // 189 = Liptoo Chamber
-        GetUnownArea(190, [ 13,13,13,13,18,18,18,18,08,08,04,04 ]), // 190 = Weepth Chamber
-        GetUnownArea(191, [ 15,15,11,11,09,09,17,17,17,16,16,16 ]), // 191 = Dilford Chamber
-        GetUnownArea(192, [ 24,24,19,19,06,06,06,05,05,05,10,10 ]), // 192 = Scufib Chamber
-        GetUnownArea(193, [ 21,21,21,22,22,22,23,23,12,12,01,01 ]), // 193 = Rixy Chamber
-        GetUnownArea(194, [ 25,25,25,25,25,25,25,25,25,25,25,26 ]) // 194 = Viapois Chamber
-    ];
-
-    private static EncounterArea3 GetUnownArea([ConstantExpected] byte location, ReadOnlySpan<byte> SlotForms)
-    {
-        var slots = new EncounterSlot3[SlotForms.Length];
-        for (int i = 0; i < slots.Length; i++)
-            slots[i] = new EncounterSlot3 { Species = 201, LevelMin = 25, LevelMax = 25, SlotNumber = (byte)i, Form = SlotForms[i] };
-        return new EncounterArea3
-        {
-            Location = location,
-            Rate = 7,
-            Type = SlotType3.Grass,
-            Slots = slots,
-        };
-    }
 }

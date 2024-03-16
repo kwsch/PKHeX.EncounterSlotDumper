@@ -81,7 +81,7 @@ public sealed record EncounterArea2
     private static readonly (sbyte Group, byte LocationID)[] FishSwarm =
     [
         (5, 8), // Qwilfish
-        (6, 39) // Remoraid
+        (6, 39), // Remoraid
     ];
 
     /// <summary>
@@ -129,7 +129,7 @@ public sealed record EncounterArea2
         return GetAreas2Headbutt(data, ref ofs).ToArray();
     }
 
-    private static EncounterArea2 GetSlots2Fishing(ReadOnlySpan<byte> data, ref int ofs, byte location, SlotType2 t)
+    private static EncounterArea2 GetSlots2Fishing(ReadOnlySpan<byte> data, ref int ofs, byte location, [ConstantExpected] SlotType2 t)
     {
         // scan for count
         // slot set ends with final slot having 0xFF 0x** 0x**

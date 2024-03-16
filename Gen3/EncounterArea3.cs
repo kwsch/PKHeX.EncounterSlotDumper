@@ -55,9 +55,30 @@ public sealed record EncounterArea3
             });
         }
 
+        if (t is Grass && IsTanobyRuinUnown(location))
+        {
+            // Load the Unown forms for Tanoby Ruins
+            var arr = GetTanoby(location);
+            for (int i = 0; i < arr.Length; i++)
+                slots[i].Form = arr[i];
+        }
+
         var area = new EncounterArea3 { Location = location, Type = t, Rate = rate, Slots = [..slots] };
         areas.Add(area);
     }
+
+    private static bool IsTanobyRuinUnown(byte location) => location is >= 188 and <= 194;
+    private static ReadOnlySpan<byte> GetTanoby(byte location) => location switch
+    {
+        188 => [00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 27], // 188 = Monean Chamber
+        189 => [02, 02, 02, 03, 03, 03, 07, 07, 07, 20, 20, 14], // 189 = Liptoo Chamber
+        190 => [13, 13, 13, 13, 18, 18, 18, 18, 08, 08, 04, 04], // 190 = Weepth Chamber
+        191 => [15, 15, 11, 11, 09, 09, 17, 17, 17, 16, 16, 16], // 191 = Dilford Chamber
+        192 => [24, 24, 19, 19, 06, 06, 06, 05, 05, 05, 10, 10], // 192 = Scufib Chamber
+        193 => [21, 21, 21, 22, 22, 22, 23, 23, 12, 12, 01, 01], // 193 = Rixy Chamber
+        194 => [25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 26], // 194 = Viapois Chamber
+        _ => throw new ArgumentOutOfRangeException(nameof(location)),
+    };
 
     private static void GetSlots3Fishing(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] int numslots,
         List<EncounterArea3> areas, byte location)

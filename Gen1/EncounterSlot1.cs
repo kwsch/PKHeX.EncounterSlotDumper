@@ -1,5 +1,4 @@
 using System;
-using static PKHeX.EncounterSlotDumper.SlotType1;
 
 namespace PKHeX.EncounterSlotDumper;
 
@@ -27,17 +26,15 @@ public sealed record EncounterSlot1 : INumberedSlot
     /// <param name="data">Byte array containing complete slot data table.</param>
     /// <param name="ofs">Offset to start reading from.</param>
     /// <param name="count">Amount of slots to read.</param>
-    /// <param name="type">Type of encounter slot table.</param>
     /// <returns>Array of encounter slots.</returns>
-    public static EncounterSlot1[] ReadSlots(ReadOnlySpan<byte> data, ref int ofs, int count, SlotType1 type)
+    public static EncounterSlot1[] ReadSlots(ReadOnlySpan<byte> data, ref int ofs, int count)
     {
-        var bump = type == Surf ? 4 : 0;
         var slots = new EncounterSlot1[count];
         for (int slot = 0; slot < count; slot++)
         {
             var min = data[ofs++];
             var species = data[ofs++];
-            var max = (byte)(min + bump);
+            var max = min;
             slots[slot] = new EncounterSlot1(species, min, max, (byte)slot);
         }
 

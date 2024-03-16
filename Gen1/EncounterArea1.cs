@@ -55,22 +55,22 @@ public sealed record EncounterArea1
 
             var gRate = data[ptr++];
             if (gRate != 0)
-                areas.Add(ReadSlotsGW(data, ptr, i, gRate, Grass));
+                areas.Add(ReadSlotsGW(data, ref ptr, i, gRate, Grass));
             var wRate = data[ptr++];
             if (wRate != 0)
-                areas.Add(ReadSlotsGW(data, ptr, i, wRate, Surf));
+                areas.Add(ReadSlotsGW(data, ref ptr, i, wRate, Surf));
         }
 
         return [.. areas];
     }
 
-    private static EncounterArea1 ReadSlotsGW(ReadOnlySpan<byte> data, int ofs, int areaIndex, byte rate, SlotType1 type)
+    private static EncounterArea1 ReadSlotsGW(ReadOnlySpan<byte> data, ref int ofs, int areaIndex, byte rate, [ConstantExpected] SlotType1 type)
         => new()
     {
         Location = (byte)areaIndex,
         Rate = rate,
         Type = type,
-        Slots = GetSlots1GrassWater(data, ref ofs),
+        Slots = GetSlots1GrassWater(data, ref ofs, type),
     };
 
     /// <summary>
@@ -91,7 +91,7 @@ public sealed record EncounterArea1
                 Rate = 0, // Not really a rate, done separately. Dialogue disjoint.
                 Location = data[(i * size) + 0],
                 Type = Super_Rod,
-                Slots = ReadSlots1FishingYellow(data, ref ofs, 4)
+                Slots = ReadSlots1FishingYellow(data, ref ofs, 4),
             };
         }
 
@@ -116,22 +116,22 @@ public sealed record EncounterArea1
                 Rate = 0, // Not really a rate, done separately. Dialogue disjoint.
                 Location = (byte)loc,
                 Type = Super_Rod,
-                Slots = GetSlots1Fishing(data, ref ptr)
+                Slots = GetSlots1Fishing(data, ref ptr),
             };
         }
 
         return areas;
     }
 
-    private static EncounterSlot1[] GetSlots1GrassWater(ReadOnlySpan<byte> data, ref int ofs)
+    private static EncounterSlot1[] GetSlots1GrassWater(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] SlotType1 type)
     {
-        return EncounterSlot1.ReadSlots(data, ref ofs, 10, Grass);
+        return EncounterSlot1.ReadSlots(data, ref ofs, 10);
     }
 
     private static EncounterSlot1[] GetSlots1Fishing(ReadOnlySpan<byte> data, ref int ofs)
     {
         var count = data[ofs++];
-        return EncounterSlot1.ReadSlots(data, ref ofs, count, Super_Rod);
+        return EncounterSlot1.ReadSlots(data, ref ofs, count);
     }
 
     public static readonly EncounterArea1 FishOld_RBY = new()
