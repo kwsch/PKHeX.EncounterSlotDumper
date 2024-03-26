@@ -157,12 +157,9 @@ public sealed record EncounterArea2
         // slot set ends in 0xFF (1 byte)
         if (tableCount == 1)
         {
-            areas.Add(ReadHeadbuttArea(data, ref ofs, location, Rock_Smash));
         }
         else
         {
-            areas.Add(ReadHeadbuttArea(data, ref ofs, location, Headbutt));
-            areas.Add(ReadHeadbuttArea(data, ref ofs, location, HeadbuttSpecial));
         }
     }
 
@@ -329,18 +326,22 @@ public sealed record EncounterArea2
         int baseOffset = min - ofs;
 
         // Read Tables
-        var head = new List<EncounterArea2>();
-        var rock = new List<EncounterArea2>();
         int headCount = headLoc.Count;
+        int rockCount = rockLoc.Count;
+        var head = new List<EncounterArea2>(headCount);
+        var rock = new List<EncounterArea2>(rockCount);
         for (int i = 0; i < headCount; i++)
         {
+            var location = headLoc[i];
             int o = ptr[headID[i]] - baseOffset;
-            GetSlots2HeadRock(head, headLoc[i], data, ref o, 2);
+            head.Add(ReadHeadbuttArea(data, ref o, location, Headbutt));
+            head.Add(ReadHeadbuttArea(data, ref o, location, HeadbuttSpecial));
         }
-        for (int i = 0; i < rock.Count; i++)
+        for (int i = 0; i < rockCount; i++)
         {
+            var location = rockLoc[i];
             int o = ptr[rockID[i]] - baseOffset;
-            GetSlots2HeadRock(rock, rockLoc[i], data, ref o, 1);
+            rock.Add(ReadHeadbuttArea(data, ref o, location, Rock_Smash));
         }
 
         return head.Concat(rock);
