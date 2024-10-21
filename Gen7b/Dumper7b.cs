@@ -75,16 +75,17 @@ public static class Dumper7b
 
             var slots = table.Slots;
             var extra = species
-                .Select(s => GetSlot(s, slots, loc)).ToArray();
+                .Select(s => GetSlot(s, slots, loc, table.ToArea1, table.ToArea2)).ToArray();
             table.Slots = [..slots, ..extra];
         }
     }
 
-    private static EncounterSlot7b GetSlot(ushort species, ReadOnlySpan<EncounterSlot7b> others, ushort loc)
+    private static EncounterSlot7b GetSlot(ushort species, ReadOnlySpan<EncounterSlot7b> others, ushort loc, byte toarea1, byte toarea2)
     {
         var min = GetMinLevel(species, others, loc);
         var max = GetMaxLevel(species, others, loc);
-        return new EncounterSlot7b(species, min, max);
+        byte flags = EncounterArea7b.GetCrossoverAreaFlags(species, min, max, loc, toarea1, toarea2);
+        return new EncounterSlot7b(species, min, max, flags);
     }
 
     private static byte GetMaxLevel(ushort species, ReadOnlySpan<EncounterSlot7b> slots, ushort loc)

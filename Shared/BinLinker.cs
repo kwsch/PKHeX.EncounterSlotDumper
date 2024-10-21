@@ -46,10 +46,10 @@ public static class BinLinker
         int dataOffset = 4 + 4 + (count * 4);
 
         // Start the data filling.
-        using MemoryStream dataout = new MemoryStream();
-        using MemoryStream offsetMap = new MemoryStream();
-        using BinaryWriter bd = new BinaryWriter(dataout);
-        using BinaryWriter bo = new BinaryWriter(offsetMap);
+        using MemoryStream dataout = new();
+        using MemoryStream offsetMap = new();
+        using BinaryWriter bd = new(dataout);
+        using BinaryWriter bo = new(offsetMap);
         // For each file...
         for (int i = 0; i < count; i++)
         {

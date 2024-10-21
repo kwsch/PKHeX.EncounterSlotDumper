@@ -11,8 +11,8 @@ namespace PKHeX.EncounterSlotDumper;
 /// </remarks>
 public class PersonalTable
 {
-    public static readonly PersonalTable HGSS = new PersonalTable(Resources.personal_hgss, 4, 493);
-    public static readonly PersonalTable E = new PersonalTable(Resources.personal_e, 3, 384);
+    public static readonly PersonalTable HGSS = new(Resources.personal_hgss, 4, 493);
+    public static readonly PersonalTable E = new(Resources.personal_e, 3, 384);
 
     public PersonalTable(byte[] data, int format, int maxSpecies)
     {
