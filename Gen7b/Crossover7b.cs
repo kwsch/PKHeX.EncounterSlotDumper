@@ -68,6 +68,16 @@ public sealed record Crossover7b
         new (018, 03, 56, 09, 34 ), // Pidgeot from Route 7 to Celadon City
         new (149, 03, 56, 09, 34 ), // Dragonite from Route 7 to Celadon City
         new (016, 13, 18, 13, 33 ), // Pidgey from Route 11 to Vermilion City
+        new (019, 13, 18, 13, 33 ), // Rattata from Route 11 to Vermilion City
+        new (020, 13, 18, 13, 33 ), // Raticate from Route 11 to Vermilion City
+        new (072, 13, 18, 13, 33 ), // Tentacool from Route 11 to Vermilion City
+        new (073, 13, 18, 13, 33 ), // Tentacruel from Route 11 to Vermilion City
+        new (096, 13, 18, 13, 33 ), // Drowzee from Route 11 to Vermilion City
+        new (113, 13, 18, 13, 33 ), // Chansey from Route 11 to Vermilion City
+        new (116, 13, 18, 13, 33 ), // Horsea from Route 11 to Vermilion City
+        new (117, 13, 18, 13, 33 ), // Seadra from Route 11 to Vermilion City
+        new (122, 13, 18, 13, 33 ), // Mr. Mime from Route 11 to Vermilion City
+        new (129, 13, 18, 13, 33 ), // Magikarp from Route 11 to Vermilion City
         new (016, 31, 36, 14, 15 ), // Pidgey from Route 12 to Route 13
         new (070, 31, 36, 14, 15 ), // Weepinbell from Route 12 to Route 13
         new (072, 31, 36, 14, 15 ), // Tentacool from Route 12 to Route 13
@@ -101,7 +111,11 @@ public sealed record Crossover7b
         new (018, 03, 56, 22, 36 ), // Pidgeot from Route 20 to Cinnabar Island
         new (149, 03, 56, 22, 36 ), // Dragonite from Route 20 to Cinnabar Island
         new (130, 37, 42, 22, 21 ), // Gyarados from Route 20 to Route 19
+        new (072, 37, 42, 23, 28 ), // Tentacool from Route 21 to Pallet Town
         new (073, 37, 42, 23, 28 ), // Tentacruel from Route 21 to Pallet Town
+        new (120, 37, 42, 23, 28 ), // Staryu from Route 21 to Pallet Town
+        new (121, 37, 42, 23, 28 ), // Starmie from Route 21 to Pallet Town
+        new (129, 37, 42, 23, 28 ), // Magikarp from Route 21 to Pallet Town
         new (007, 09, 14, 27, 26 ), // Squirtle from Route 25 to Route 24
         new (043, 09, 14, 27, 26 ), // Oddish from Route 25 to Route 24
         new (048, 09, 14, 27, 26 ), // Venonat from Route 25 to Route 24
