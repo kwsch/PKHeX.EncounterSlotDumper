@@ -333,6 +333,8 @@ public static class Dumper5
         new() { Species = 136, LevelMin = 15, LevelMax = 60, }, // Flareon
         new() { Species = 196, LevelMin = 15, LevelMax = 60, }, // Espeon
         new() { Species = 197, LevelMin = 15, LevelMax = 60, }, // Umbreon
+        new() { Species = 431, LevelMin = 15, LevelMax = 60, }, // Glameow
+        new() { Species = 434, LevelMin = 15, LevelMax = 60, }, // Stunky
         new() { Species = 470, LevelMin = 15, LevelMax = 60, }, // Leafeon
         new() { Species = 471, LevelMin = 15, LevelMax = 60, }, // Glaceon
 
@@ -350,7 +352,6 @@ public static class Dumper5
         Location = 143, // Hidden Grotto
         Slots = [.. SlotsB2W2_HiddenGrottoEncounterSlots,
             new() { Species = 015, LevelMin = 55, LevelMax = 60 }, // Beedrill @ Pinwheel Forest
-            new() { Species = 434, LevelMin = 15, LevelMax = 60 }, // Stunky from Funfest Missions
         ],
     };
 
@@ -359,7 +360,6 @@ public static class Dumper5
         Location = 143, // Hidden Grotto
         Slots = [.. SlotsB2W2_HiddenGrottoEncounterSlots, 
             new() { Species = 012, LevelMin = 55, LevelMax = 60 }, // Butterfree @ Pinwheel Forest
-            new() { Species = 431, LevelMin = 15, LevelMax = 60 }, // Glameow from Funfest Missions
         ],
     };
 
