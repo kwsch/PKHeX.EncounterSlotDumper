@@ -14,42 +14,6 @@ public static class Dumper4Safari
 
     private const byte SafariZoneMetLocation = 202;
 
-    private enum SafariBlockType
-    {
-        None = 0,
-        Plains = 1,
-        Forest = 2,
-        Peak = 3,
-        Waterside = 4,
-        COUNT = 5,
-    }
-
-    private enum SafariSubZone
-    {
-        Plains = 0,
-        Meadow = 1,
-        Savannah = 2,
-        Peak = 3,
-        Rocky = 4,
-        Wetland = 5,
-        Forest = 6,
-        Swamp = 7,
-        Marshland = 8,
-        Wasteland = 9,
-        Mountain = 10,
-        Desert = 11,
-    }
-
-    private static bool IsWater(SafariSubZone zone) => zone switch
-    {
-        SafariSubZone.Meadow => true,
-        SafariSubZone.Rocky => true,
-        SafariSubZone.Wetland => true,
-        SafariSubZone.Swamp => true,
-        SafariSubZone.Marshland => true,
-        _ => false,
-    };
-
     public static EncounterArea4HGSS[] GetSafariAreaSets()
     {
         var resource = Resources.safari_a230;
@@ -58,15 +22,19 @@ public static class Dumper4Safari
         for (int i = 0; i < pkl.Length; i++)
             zones[i] = new SafariZone(pkl[i]);
 
+        // Dump zones to parse
+        if (ExportParse)
+            SafariZoneDumper.DumpZones(zones);
+
         // subzone, and by type
         var computedTables = new List<EncounterArea4HGSS>();
         for (int i = 0; i < zones.Length; i++)
-            AddToTable(computedTables, (SafariSubZone)i, zones[i]);
+            AddToTable(computedTables, (SafariSubZone4)i, zones[i]);
 
         return [.. computedTables];
     }
 
-    private static void AddToTable(List<EncounterArea4HGSS> result, SafariSubZone i, SafariZone zone)
+    private static void AddToTable(List<EncounterArea4HGSS> result, SafariSubZone4 i, SafariZone zone)
     {
         AddToTable(result, i, zone.Grass);
         AddToTable(result, i, zone.Surf);
@@ -75,17 +43,17 @@ public static class Dumper4Safari
         AddToTable(result, i, zone.Super);
     }
 
-    private static void AddToTable(List<EncounterArea4HGSS> result, SafariSubZone index, SafariSlotSet set)
+    private static void AddToTable(List<EncounterArea4HGSS> result, SafariSubZone4 index, SafariSlotSet set)
     {
         var type = set.Type;
-        bool hasWater = IsWater(index);
+        bool hasWater = index.IsWater();
         if (!hasWater && type != Safari_Grass)
             return;
 
         if (ExportParse)
             Parse.Add($"Safari {index} {type}");
 
-        var deduplicate = new HashSet<SafariSlot>();
+        var deduplicate = new HashSet<SafariSlot4>();
         AddAndRunPermutation(deduplicate, set.Day, set.ExtraDay, set.ExtraBlocks, "Day");
         AddAndRunPermutation(deduplicate, set.Morning, set.ExtraMorning, set.ExtraBlocks, "Morning");
         AddAndRunPermutation(deduplicate, set.Night, set.ExtraNight, set.ExtraBlocks, "Night");
@@ -109,7 +77,7 @@ public static class Dumper4Safari
         }
     }
 
-    private static EncounterArea4HGSS GetAreaWrapper(IEnumerable<SafariSlot> deduplicate, SlotType4 type, SafariSubZone index)
+    private static EncounterArea4HGSS GetAreaWrapper(IEnumerable<SafariSlot4> deduplicate, SlotType4 type, SafariSubZone4 index)
     {
         var condensed = deduplicate
             .OrderBy(z => z.Species).ThenBy(z => z.Level)
@@ -127,32 +95,30 @@ public static class Dumper4Safari
         };
     }
 
-    private static void AddAndRunPermutation(HashSet<SafariSlot> result, EncounterSlot4[] regular,
+    private static void AddAndRunPermutation(HashSet<SafariSlot4> result, EncounterSlot4[] regular,
         EncounterSlot4[] extra, BlockRequirement[] blocks, string time)
     {
         if (ExportParse)
             Parse.Add($"===={time}====");
-
-        foreach (var slot in regular)
-            result.Add(Slim(slot));
 
         // Create all hypothetical permutations of the extra slots.
         // For each valid permutation, add the result, and run the magnet pull/static slot calc on it too.
         CreatePermutations(result, regular, extra, blocks);
     }
 
-    private static void CreatePermutations(HashSet<SafariSlot> result, EncounterSlot4[] regular, EncounterSlot4[] extra, BlockRequirement[] blocks)
+    private static void CreatePermutations(HashSet<SafariSlot4> result, EncounterSlot4[] regular, EncounterSlot4[] extra, BlockRequirement[] blocks)
     {
         EncounterSlot4[] workspace = [.. regular]; // keep existing slots
         Span<bool> used = stackalloc bool[extra.Length];
-        Span<byte> placed = stackalloc byte[(int)SafariBlockType.COUNT]; // 1,2,3,4 valid indexes
+        Span<byte> placed = stackalloc byte[(int)SafariBlockType4.COUNT]; // 1,2,3,4 valid indexes
 
         // Here we go!
+        // Un-permuted is a valid setup. Export it.
         AddPermutationAndDerived(result, workspace, placed);
         PermuteAdd(result, extra, blocks, workspace, used, placed);
     }
 
-    private static void PermuteAdd(HashSet<SafariSlot> result, ReadOnlySpan<EncounterSlot4> extra, ReadOnlySpan<BlockRequirement> blocks,
+    private static void PermuteAdd(HashSet<SafariSlot4> result, ReadOnlySpan<EncounterSlot4> extra, ReadOnlySpan<BlockRequirement> blocks,
         EncounterSlot4[] workspace, Span<bool> used, Span<byte> placed, byte slotIndex = 0, int depth = 0)
     {
         if (extra.Length == depth)
@@ -166,12 +132,17 @@ public static class Dumper4Safari
         used[depth] = true;
         var prior = workspace[slotIndex];
         workspace[slotIndex] = extra[depth] with { SlotNumber = slotIndex };
+
+        // Update the current blocks placed to ensure the slot is added.
         Span<byte> newPlaced = stackalloc byte[placed.Length];
         placed.CopyTo(newPlaced);
         UpdateRequirements(newPlaced, blocks[depth]);
+
+        // Check if no higher-index slots are made valid -- deeper recursion will enable them naturally.
         var chk = IsPermutationValid(newPlaced, blocks, used, depth);
         if (chk != ArrangeResult.Invalid)
         {
+            // Only export if no side effects (higher index slots)
             if (chk == ArrangeResult.Valid)
                 AddPermutationAndDerived(result, workspace, newPlaced);
             // else a deeper slot was needing to be true, we'll attempt it later.
@@ -212,24 +183,15 @@ public static class Dumper4Safari
         {
             if (used[i])
                 continue;
-            var req = blocks[i];
-            var type0 = req.Block0;
-            if (type0 != 0 && placed[type0] >= req.Count0)
-                return IsInvalid(depth, i);
+            if (!blocks[i].IsSatisfied(placed))
+                continue;
 
-            var type1 = req.Block1;
-            if (type1 != 0 && placed[type1] >= req.Count1)
-                return i < depth ? ArrangeResult.Invalid : ArrangeResult.SideEffect;
-        }
-        return ArrangeResult.Valid;
-
-        static ArrangeResult IsInvalid(int depth, int index)
-        {
-            if (index < depth) // Slot at this index should really be TRUE, so our setup is invalid.
+            if (i < depth) // Slot at this index should really be TRUE, so our setup is invalid.
                 return ArrangeResult.Invalid;
             // Later slot can be flipped on via the recursion, so just indicate that it's not a valid setup yet.
             return ArrangeResult.SideEffect;
         }
+        return ArrangeResult.Valid;
     }
 
     private static void UpdateRequirements(Span<byte> placed, BlockRequirement block)
@@ -240,11 +202,11 @@ public static class Dumper4Safari
 
     private static void AddBlock(Span<byte> newPlaced, byte type, byte count)
     {
-        var existCount = newPlaced[type];
-        newPlaced[type] = Math.Max(existCount, count);
+        ref var existCount = ref newPlaced[type];
+        existCount = Math.Max(existCount, count);
     }
 
-    private static void AddPermutationAndDerived(HashSet<SafariSlot> result, EncounterSlot4[] workspace, ReadOnlySpan<byte> blocks)
+    private static void AddPermutationAndDerived(HashSet<SafariSlot4> result, EncounterSlot4[] workspace, ReadOnlySpan<byte> blocks)
     {
         foreach (var slot in workspace)
             result.Add(Slim(slot));
@@ -296,46 +258,10 @@ public static class Dumper4Safari
                 continue;
             if (sb.Length != 0)
                 sb.Append(", ");
-            sb.Append($"{(SafariBlockType)i} x{blocks[i]}");
+            sb.Append($"{(SafariBlockType4)i} x{blocks[i]}");
         }
         return sb.ToString();
     }
 
-    private static SafariSlot Slim(EncounterSlot4 arg) => new(arg);
-
-    // 8 byte struct
-    private readonly record struct SafariSlot
-    {
-        public readonly ushort Species;
-        public readonly byte Level;
-        public readonly byte SlotNumber;
-
-        public readonly byte StaticIndex;
-        public readonly byte MagnetPullIndex;
-        public readonly byte StaticCount;
-        public readonly byte MagnetPullCount;
-
-        public SafariSlot(EncounterSlot4 slot)
-        {
-            Species = slot.Species;
-            Level = slot.LevelMin;
-            SlotNumber = slot.SlotNumber;
-            StaticIndex = slot.StaticIndex;
-            MagnetPullIndex = slot.MagnetPullIndex;
-            StaticCount = slot.StaticCount;
-            MagnetPullCount = slot.MagnetPullCount;
-        }
-
-        public EncounterSlot4 Inflate() => new()
-        {
-            Species = Species,
-            LevelMin = Level,
-            LevelMax = Level,
-            SlotNumber = SlotNumber,
-            MagnetPullCount = MagnetPullCount,
-            MagnetPullIndex = MagnetPullIndex,
-            StaticCount = StaticCount,
-            StaticIndex = StaticIndex,
-        };
-    }
+    private static SafariSlot4 Slim(EncounterSlot4 arg) => new(arg);
 }
