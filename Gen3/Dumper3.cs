@@ -30,9 +30,9 @@ public static class Dumper3
         lg = lg.Where(z => z.Location != 183 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
         em = em.Where(z => z.Location != 210 || z.Slots[0].Species == (int)Species.Zubat).ToArray();
 
-        var rd = ru.Concat(new[] { FishFeebas }).OrderBy(z => z.Location).ThenBy(z => z.Type);
-        var sd = sa.Concat(new[] { FishFeebas }).OrderBy(z => z.Location).ThenBy(z => z.Type);
-        var ed = em.Concat(new[] { FishFeebas }).OrderBy(z => z.Location).ThenBy(z => z.Type);
+        var rd = ru.Concat([FishFeebas]).OrderBy(z => z.Location).ThenBy(z => z.Type);
+        var sd = sa.Concat([FishFeebas]).OrderBy(z => z.Location).ThenBy(z => z.Type);
+        var ed = em.Concat([FishFeebas]).OrderBy(z => z.Location).ThenBy(z => z.Type);
 
         var fd = fr.OrderBy(z => z.Location).ThenBy(z => z.Type);
         var ld = lg.OrderBy(z => z.Location).ThenBy(z => z.Type);
@@ -161,7 +161,7 @@ public static class Dumper3
                 new EncounterSlot3Swarm(MoveSwarmSkittyRS) { Species = 300, LevelMin = 15, LevelMax = 15 },
                 new EncounterSlot3Swarm(MoveSwarmSkittyE) { Species = 300, LevelMin = 08, LevelMax = 08 }
             ],},
-        new EncounterArea3 { Location = 32, // Route 117
+        new() { Location = 32, // Route 117
             Type = SlotType3.SwarmGrass50,
             Rate = 20,
             Slots =
@@ -169,7 +169,7 @@ public static class Dumper3
                 new EncounterSlot3Swarm(MoveSwarmSurskit) { Species = 283, LevelMin = 15, LevelMax = 15 },
                 new EncounterSlot3Swarm(MoveSwarmNuzleaf) { Species = 273, LevelMin = 13, LevelMax = 13 } // Has same moves as Nuzleaf
             ],},
-        new EncounterArea3 { Location = 35, // Route 120
+        new() { Location = 35, // Route 120
             Type = SlotType3.SwarmGrass50,
             Rate = 20,
             Slots =
@@ -180,7 +180,7 @@ public static class Dumper3
     ];
 
     // Feebas fishing spot
-    public static EncounterArea3 FishFeebas = new()
+    private static readonly EncounterArea3 FishFeebas = new()
     {
         Location = 34, // Route 119
         Rate = 0,

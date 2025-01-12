@@ -1,17 +1,13 @@
-﻿using System;
+using System;
 
 namespace PKHeX.EncounterSlotDumper;
 
 /// <summary>
 /// <see cref="PersonalInfo"/> class with values from Generation 3 games.
 /// </summary>
-public class PersonalInfoG3 : PersonalInfo
+public class PersonalInfoG3(byte[] data) : PersonalInfo(data)
 {
     public const int SIZE = 0x1C;
-
-    public PersonalInfoG3(byte[] data) : base(data)
-    {
-    }
 
     public override byte[] Write() => Data;
 

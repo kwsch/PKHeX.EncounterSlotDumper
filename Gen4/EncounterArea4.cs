@@ -24,7 +24,7 @@ public abstract record EncounterArea4
     /// <param name="slotSize">DP/Pt slotSize = 4 bytes/entry, HG/SS slotSize = 2 bytes/entry</param>
     /// <param name="ReplacedSlots">Slots from regular encounter table that end up replaced by in-game conditions</param>
     /// <param name="slotnums">Slot indexes to replace with read species IDs</param>
-    protected static List<EncounterSlot4> GetSlots4GrassSlotReplace(byte[] data, int ofs, int slotSize, 
+    protected static List<EncounterSlot4> GetSlots4GrassSlotReplace(byte[] data, int ofs, int slotSize,
         EncounterSlot4[] ReplacedSlots, ReadOnlySpan<byte> slotnums)
     {
         var slots = new List<EncounterSlot4>();

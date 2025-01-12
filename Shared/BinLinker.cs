@@ -14,10 +14,10 @@ public static class BinLinker
     public static byte[][] Unpack(byte[] fileData, string identifier)
     {
         if (fileData.Length < 4)
-            throw new ArgumentException(nameof(fileData));
+            throw new ArgumentException("Invalid file data: file is too short", nameof(fileData));
 
         if (identifier[0] != fileData[0] || identifier[1] != fileData[1])
-            throw new ArgumentException(nameof(identifier));
+            throw new ArgumentException($"Incorrect identifier: expected {identifier}", nameof(identifier));
 
         int count = BitConverter.ToUInt16(fileData, 2); int ctr = 4;
         int start = BitConverter.ToInt32(fileData, ctr); ctr += 4;

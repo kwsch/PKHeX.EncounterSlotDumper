@@ -25,25 +25,19 @@ public class PersonalTable
 
         MaxSpeciesID = maxSpecies;
     }
-    private static Func<byte[], PersonalInfo> GetConstructor(int format)
+    private static Func<byte[], PersonalInfo> GetConstructor(int format) => format switch
     {
-        return format switch
-        {
-            3 => (z => new PersonalInfoG3(z)),
-            4 => (z => new PersonalInfoG4(z)),
-            _ => throw new ArgumentException()
-        };
-    }
+        3 => (z => new PersonalInfoG3(z)),
+        4 => (z => new PersonalInfoG4(z)),
+        _ => throw new ArgumentOutOfRangeException(nameof(format), format, null),
+    };
 
-    private static int GetEntrySize(int format)
+    private static int GetEntrySize(int format) => format switch
     {
-        return format switch
-        {
-            3 => PersonalInfoG3.SIZE,
-            4 => PersonalInfoG4.SIZE,
-            _ => -1
-        };
-    }
+        3 => PersonalInfoG3.SIZE,
+        4 => PersonalInfoG4.SIZE,
+        _ => -1,
+    };
 
     private readonly PersonalInfo[] Table;
 

@@ -16,7 +16,6 @@ public sealed record EncounterSlot2
     public byte LevelMax { get; init; }
     public byte SlotNumber { get; }
 
-
     internal EncounterTime Time;
 
     public EncounterSlot2(byte species, byte min, byte max, byte slot)

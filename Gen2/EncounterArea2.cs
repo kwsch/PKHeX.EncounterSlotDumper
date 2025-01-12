@@ -7,7 +7,6 @@ using static PKHeX.EncounterSlotDumper.SlotType2;
 
 namespace PKHeX.EncounterSlotDumper;
 
-[Flags]
 public enum SlotType2 : byte
 {
     Grass = 0,
@@ -150,19 +149,6 @@ public sealed record EncounterArea2
         return new() { Location = location, AreaRate = 50, SlotRates = rates, Slots = slots, Type = t };
     }
 
-    private static void GetSlots2HeadRock(ICollection<EncounterArea2> areas, byte location, ReadOnlySpan<byte> data, ref int ofs,
-        [ConstantExpected] int tableCount)
-    {
-        // rate, species, level (3 bytes)
-        // slot set ends in 0xFF (1 byte)
-        if (tableCount == 1)
-        {
-        }
-        else
-        {
-        }
-    }
-
     private static EncounterArea2 ReadHeadbuttArea(ReadOnlySpan<byte> data, ref int ofs, byte location, [ConstantExpected] SlotType2 type)
     {
         const int size = 3;
@@ -184,7 +170,7 @@ public sealed record EncounterArea2
         return new() { Location = location, AreaRate = 0, SlotRates = rates, Slots = slots, Type = type };
     }
 
-    private static IEnumerable<EncounterArea2> GetAreas2(ReadOnlySpan<byte> data, ref int ofs,
+    private static List<EncounterArea2> GetAreas2(ReadOnlySpan<byte> data, ref int ofs,
         [ConstantExpected] int slotSets, [ConstantExpected] int slotCount,
         [ConstantExpected] SlotType2 t)
     {
@@ -214,13 +200,7 @@ public sealed record EncounterArea2
 
             if (areaRates.Length != 1) // Time of Day rates.
             {
-                var time = i switch
-                {
-                    0 => EncounterTime.Morning,
-                    1 => EncounterTime.Day,
-                    2 => EncounterTime.Night,
-                    _ => throw new ArgumentOutOfRangeException(),
-                };
+                var time = GetTime(i);
                 foreach (var slot in slots)
                     slot.Time = time;
             }
@@ -229,6 +209,14 @@ public sealed record EncounterArea2
             areas.Add(area);
         }
     }
+
+    private static EncounterTime GetTime(int index) => index switch
+    {
+        0 => EncounterTime.Morning,
+        1 => EncounterTime.Day,
+        2 => EncounterTime.Night,
+        _ => throw new ArgumentOutOfRangeException(nameof(index), index, null),
+    };
 
     private static List<EncounterArea2> GetAreas2Fishing(ReadOnlySpan<byte> data, ref int ofs)
     {

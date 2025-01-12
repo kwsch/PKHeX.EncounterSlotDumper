@@ -1,5 +1,7 @@
 using System;
 
+namespace PKHeX.EncounterSlotDumper;
+
 public sealed class SafariHeader(ReadOnlySpan<byte> Data)
 {
     public readonly byte Grass = Data[0]; // 10

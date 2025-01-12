@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace PKHeX.EncounterSlotDumper;
@@ -16,9 +15,9 @@ public sealed record EncounterArea7b
     {
         var result = new EncounterArea7b[input.Length - NoSpawnAreas.Length];
         var count = 0; // Track how many were actually added
-        for (int i = 0; i < input.Length; i++)
+        foreach (byte[] areaData in input)
         {
-            var area = new EncounterArea7b(input[i], 0, 0);
+            var area = new EncounterArea7b(areaData);
 
             // If it's one of the areas that don't use spawns, skip it.
             if (NoSpawnAreas.Contains(area.Location))
@@ -29,22 +28,22 @@ public sealed record EncounterArea7b
         return result;
     }
 
-    private EncounterArea7b(byte[] data, byte cross1, byte cross2)
+    private EncounterArea7b(byte[] data)
     {
         Location = BitConverter.ToUInt16(data, 0);
 
         // Record the areas this area can feed into.
-        foreach (var cross in AreaLinks)
+        foreach (var (Area1, Area2) in AreaLinks)
         {
-            if (Location == cross.Item1)
-            {
-                if (ToArea1 == 0)
-                    ToArea1 = cross.Item2;
-                else if (ToArea2 == 0)
-                    ToArea2 = cross.Item2;
-                else
-                    throw new Exception($"Attempted to add more than 2 crossover areas to area {Location}!");
-            }
+            if (Location != Area1)
+                continue;
+
+            if (ToArea1 == 0)
+                ToArea1 = Area1;
+            else if (ToArea2 == 0)
+                ToArea2 = Area2;
+            else
+                throw new Exception($"Attempted to add more than 2 crossover areas to area {Location}!");
         }
         Slots = ReadSlots(data, ToArea1, ToArea2);
     }
@@ -56,7 +55,7 @@ public sealed record EncounterArea7b
     ];
 
     // List of areas that have at least one slot that crosses into another. From Area, To Area
-    private static readonly List<(byte, byte)> AreaLinks =
+    private static readonly List<(byte Area1, byte Area2)> AreaLinks =
     [
         (03, 28),
         (04, 30),
@@ -74,7 +73,7 @@ public sealed record EncounterArea7b
         (27, 26)
     ];
 
-    private EncounterSlot7b[] ReadSlots(byte[] data, byte toarea1, byte toarea2)
+    private static EncounterSlot7b[] ReadSlots(byte[] data, byte toarea1, byte toarea2)
     {
         var loc = BitConverter.ToUInt16(data, 0);
         const int size = 4;

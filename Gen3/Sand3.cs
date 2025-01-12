@@ -31,12 +31,12 @@ public static class Sand3
 
     private static ushort GetG3Species(ushort g4index)
     {
-        int index = newindex.IndexOf(g4index);
-        return oldindex[index > -1 ? index : 0];
+        int index = NewSpeciesIndexes.IndexOf(g4index);
+        return OldSpeciesIndexes[index > -1 ? index : 0];
     }
 
     #region Gen 3 Species Table
-    public static ReadOnlySpan<ushort> newindex =>
+    public static ReadOnlySpan<ushort> NewSpeciesIndexes =>
     [
         0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
         31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,
@@ -58,7 +58,7 @@ public static class Sand3
         385,386,358
     ];
 
-    public static ReadOnlySpan<ushort> oldindex =>
+    public static ReadOnlySpan<ushort> OldSpeciesIndexes =>
     [
         0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
         31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,

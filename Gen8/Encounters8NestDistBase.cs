@@ -5,10 +5,10 @@ namespace PKHeX.EncounterSlotDumper;
 // Distribution Nest Encounters (BCAT)
 internal static partial class Encounters8Nest
 {
-    private const AbilityPermission8 A0 = AbilityPermission8.OnlyFirst;
-    private const AbilityPermission8 A1 = AbilityPermission8.OnlySecond;
+  //private const AbilityPermission8 A0 = AbilityPermission8.OnlyFirst;
+  //private const AbilityPermission8 A1 = AbilityPermission8.OnlySecond;
     private const AbilityPermission8 A2 = AbilityPermission8.OnlyHidden;
-    private const AbilityPermission8 A3 = AbilityPermission8.Any12;
+  //private const AbilityPermission8 A3 = AbilityPermission8.Any12;
     private const AbilityPermission8 A4 = AbilityPermission8.Any12H;
 
     /// <summary>

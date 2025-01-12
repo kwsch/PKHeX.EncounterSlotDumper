@@ -1,4 +1,6 @@
-﻿public sealed record BlockRequirement
+namespace PKHeX.EncounterSlotDumper;
+
+public sealed record BlockRequirement
 {
     public byte Block0 { get; init; }
     public byte Count0 { get; init; }

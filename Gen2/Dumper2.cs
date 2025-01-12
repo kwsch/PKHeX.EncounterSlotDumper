@@ -64,13 +64,13 @@ public static class Dumper2
         var fish = Resources.encounter_gsc_f;
         var f = EncounterArea2.GetArray2Fishing(fish);
         var gr = ga.Concat(gha).Concat(f)
-            .Concat(new[] { EncounterBCC_GSC })
+            .Concat([EncounterBCC_GSC])
             .OrderBy(z => z.Location).ThenBy(z => z.Type);
         var sr = sa.Concat(sha).Concat(f)
-            .Concat(new[] { EncounterBCC_GSC })
+            .Concat([EncounterBCC_GSC])
             .OrderBy(z => z.Location).ThenBy(z => z.Type);
         var cr = ca.Concat(cha).Concat(f)
-            .Concat(new[] { EncounterBCC_GSC })
+            .Concat([EncounterBCC_GSC])
             .OrderBy(z => z.Location).ThenBy(z => z.Type);
 
         Write(gr, "encounter_gold.pkl");

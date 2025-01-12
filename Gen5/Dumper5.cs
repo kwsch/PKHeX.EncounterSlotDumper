@@ -358,7 +358,7 @@ public static class Dumper5
     private static readonly EncounterArea5 SlotsW2_HiddenGrotto = new()
     {
         Location = 143, // Hidden Grotto
-        Slots = [.. SlotsB2W2_HiddenGrottoEncounterSlots, 
+        Slots = [.. SlotsB2W2_HiddenGrottoEncounterSlots,
             new() { Species = 012, LevelMin = 55, LevelMax = 60 }, // Butterfree @ Pinwheel Forest
         ],
     };

@@ -90,12 +90,12 @@ public static class Sand1
     {
         var fileName = $"encounter_{name}_f.pkl";
         var data = File.ReadAllBytes(fileName);
-        
+
         int i = 0;
         while (data[i] != 0xFF)
         {
             int map = data[i++];
-            int count = 4;
+            const int count = 4;
 
             for (int z = 0; z < count; z++)
             {

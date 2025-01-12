@@ -3,14 +3,12 @@ namespace PKHeX.EncounterSlotDumper;
 /// <summary>
 /// Stat/misc data for individual species or their associated alternate form data.
 /// </summary>
-public abstract class PersonalInfo
+public abstract class PersonalInfo(byte[] data)
 {
     /// <summary>
     /// Raw Data
     /// </summary>
-    protected readonly byte[] Data;
-
-    protected PersonalInfo(byte[] data) => Data = data;
+    protected readonly byte[] Data = data;
 
     /// <summary>
     /// Writes entry to raw bytes.

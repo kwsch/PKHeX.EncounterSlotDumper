@@ -164,9 +164,9 @@ public static class Dumper4
     private static EncounterArea4DPPt[] GetFeebasArea(params EncounterArea4DPPt[] areas)
     {
 #if DEBUG
-        Debug.Assert(areas.Last().Location == 50); // Mt Coronet
-        Debug.Assert(areas.Last().Slots.Last().Species == (int)Species.Whiscash);
-        Debug.Assert(areas.Last().Slots[0].Species == (int)Species.Gyarados);
+        Debug.Assert(areas[^1].Location == 50); // Mt Coronet
+        Debug.Assert(areas[^1].Slots[^1].Species == (int)Species.Whiscash);
+        Debug.Assert(areas[^1].Slots[0].Species == (int)Species.Gyarados);
 
         Debug.Assert(areas.Length == 3);
         Debug.Assert(areas[0].Type == Old_Rod);
@@ -286,8 +286,8 @@ public static class Dumper4
         MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, MtSilverCave, Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
         MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, MtSilverCave, Cave_HallOfOrigin, HGSS_MtSilverCaveExteriorEncounters); // Exterior
 
-        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, Cianwood, RockSmash, ReadOnlySpan<byte>.Empty);
-        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, Cianwood, RockSmash, ReadOnlySpan<byte>.Empty);
+        MarkHGSSEncounterTypeSlots_MultipleTypes(HG_Slots, Cianwood, RockSmash, []);
+        MarkHGSSEncounterTypeSlots_MultipleTypes(SS_Slots, Cianwood, RockSmash, []);
         MarkSpecific(HG_Slots, RuinsOfAlph, Rock_Smash, DialgaPalkia);
         MarkSpecific(SS_Slots, RuinsOfAlph, Rock_Smash, DialgaPalkia);
     }
@@ -414,7 +414,7 @@ public static class Dumper4
         }
     }
 
-    private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4DPPt[] areas, [ConstantExpected] byte location, 
+    private static void MarkDPPtEncounterTypeSlots_MultipleTypes(EncounterArea4DPPt[] areas, [ConstantExpected] byte location,
         EncounterType normalEncounterType, params byte[] tallGrassAreaIndexes)
     {
         ReadOnlySpan<byte> span = tallGrassAreaIndexes;

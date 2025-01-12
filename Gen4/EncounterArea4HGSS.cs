@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static PKHeX.EncounterSlotDumper.SlotType4;
 
-namespace PKHeX.EncounterSlotDumper; 
+namespace PKHeX.EncounterSlotDumper;
 
 public enum SlotType4 : byte
 {
@@ -77,7 +77,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         return slots;
     }
 
-    private static IEnumerable<EncounterSlot4> GetSlots4WaterFishingHGSS(EncounterArea4 area, byte[] data, int ofs, int numslots, SlotType4 t)
+    private static void GetSlots4WaterFishingHGSS(EncounterArea4 area, byte[] data, int ofs, int numslots, SlotType4 t)
     {
         var slots = new List<EncounterSlot4>();
         for (int i = 0; i < numslots; i++)
@@ -87,7 +87,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             if (t == Rock_Smash && species <= 0)
                 continue;
             // Fishing and surf Slots without a species ID are added too; these are needed for the swarm encounters.
-            // These empty slots will will be deleted after we add swarm slots.
+            // These empty slots will be deleted after we add swarm slots.
 
             slots.Add(new EncounterSlot4
             {
@@ -100,7 +100,6 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         area.Slots = [.. slots];
         EncounterUtil.MarkEncountersStaticMagnetPull(area, PersonalTable.HGSS);
-        return slots;
     }
 
     private static IEnumerable<EncounterArea4HGSS> GetArea4HGSS(byte[] data)
@@ -169,7 +168,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             var area = new EncounterArea4HGSS
             {
                 Location = (byte)location,
-                Type = Surf, 
+                Type = Surf,
                 Rate = SurfRate,
                 Slots = [],
             };
@@ -181,8 +180,8 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         {
             var area = new EncounterArea4HGSS
             {
-                Location = (byte)location, 
-                Type = Rock_Smash, 
+                Location = (byte)location,
+                Type = Rock_Smash,
                 Rate = RockSmashRate,
                 Slots = [],
             };
@@ -218,14 +217,14 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         {
             var area = new EncounterArea4HGSS
             {
-                Location = (byte)location, 
-                Type = Good_Rod, 
+                Location = (byte)location,
+                Type = Good_Rod,
                 Rate = GoodRate,
                 Slots = [],
             };
             GetSlots4WaterFishingHGSS(area, data, 0x96, 5, Good_Rod);
 
-            if (s_good == Species.Staryu || location == 219 && s_good == Species.Gyarados) // Staryu @ Location = 182, 127, 130, 132, 167, 188, 210
+            if (s_good == Species.Staryu || (location == 219 && s_good == Species.Gyarados)) // Staryu @ Location = 182, 127, 130, 132, 167, 188, 210
             {
                 var exist = area.Slots[1];
                 var slots = area.Slots.ToList();
@@ -240,14 +239,14 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         {
             var area = new EncounterArea4HGSS
             {
-                Location = (byte)location, 
+                Location = (byte)location,
                 Type = Super_Rod,
                 Rate = SuperRate,
                 Slots = [],
             };
             GetSlots4WaterFishingHGSS(area, data, 0xAA, 5, Super_Rod);
 
-            if (s_good == Species.Staryu || location == 219 && s_good == Species.Gyarados) // Staryu @ Location = 182, 127, 130, 132, 167, 188, 210
+            if (s_good == Species.Staryu || (location == 219 && s_good == Species.Gyarados)) // Staryu @ Location = 182, 127, 130, 132, 167, 188, 210
             {
                 var exist = area.Slots[1];
                 var slots = area.Slots.ToList();
@@ -274,7 +273,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         var area = new EncounterArea4HGSS
         {
             Rate = 0,
-            Location = (byte)location, 
+            Location = (byte)location,
             Type = Headbutt,
             Slots = [],
         };
@@ -302,7 +301,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         area = new EncounterArea4HGSS
         {
             Rate = 0,
-            Location = (byte)location, 
+            Location = (byte)location,
             Type = HeadbuttSpecial,
             Slots = [],
         };

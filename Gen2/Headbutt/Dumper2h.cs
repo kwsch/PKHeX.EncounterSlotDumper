@@ -8,6 +8,12 @@ namespace PKHeX.EncounterSlotDumper;
 
 public static class Dumper2h
 {
+    private static JsonSerializerOptions GetOpt() => new()
+    {
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        AllowTrailingCommas = true,
+    };
+
     public static void Dump()
     {
         var raw = Resources.trees_h_c;
@@ -17,10 +23,8 @@ public static class Dumper2h
         var lines = Resources.text_gsc_00000_en.Split('\n');
         var result = t.SelectMany(z => z.DumpLocation(lines));
         File.WriteAllLines("trees.txt", result);
-
-        var opt = new JsonSerializerOptions {ReadCommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true};
         var json = Resources.trees;
-        var listing = JsonSerializer.Deserialize<TreeAreaListing>(json, opt);
+        var listing = JsonSerializer.Deserialize<TreeAreaListing>(json, GetOpt());
 
         var tables = new List<TreeInfo>();
         foreach (var l in listing!.Table)
@@ -65,13 +69,11 @@ public static class Dumper2h
         { 92, 0x2BB_3FF }, // Route 27
     };
 
-    public class TreeInfo
+    public class TreeInfo(in byte location)
     {
-        public readonly byte Location;
+        public readonly byte Location = location;
         private ushort High;
         private ushort Moderate;
-
-        public TreeInfo(in byte location) => Location = location;
 
         public void Add(Tree t)
         {

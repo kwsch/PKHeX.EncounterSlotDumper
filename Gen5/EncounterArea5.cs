@@ -68,7 +68,7 @@ public sealed record EncounterArea5
         short location, SlotType5 t)
     {
         if ((lvls.Length & 1) != 0) // levels data not paired; expect multiple of 2
-            throw new ArgumentException(nameof(lvls));
+            throw new Exception(nameof(lvls));
 
         var count = species.Length * (lvls.Length / 2);
         var slots = new EncounterSlot5[count];

@@ -137,7 +137,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
                 Type = Grass,
                 Location = (byte)location,
                 Rate = (byte)GrassRate,
-                Slots = [.. slots], 
+                Slots = [.. slots],
             };
         }
 
@@ -158,7 +158,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         var OldRate = BitConverter.ToInt32(data, 0x126);
         if (OldRate > 0)
         {
-            var area = new EncounterArea4DPPt { Location = (byte)location, 
+            var area = new EncounterArea4DPPt { Location = (byte)location,
                 Type = Old_Rod,
                 Rate = (byte)OldRate,
                 Slots = [],
@@ -171,7 +171,7 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         if (GoodRate > 0)
         {
             var area = new EncounterArea4DPPt {Location = (byte)location,
-                Type = Good_Rod, 
+                Type = Good_Rod,
                 Rate = (byte)GoodRate,
                 Slots = [],
             };
@@ -182,8 +182,8 @@ public sealed record EncounterArea4DPPt : EncounterArea4
         var SuperRate = BitConverter.ToInt32(data, 0x17E);
         if (SuperRate > 0)
         {
-            var area = new EncounterArea4DPPt {Location = (byte)location, 
-                Type = Super_Rod, 
+            var area = new EncounterArea4DPPt {Location = (byte)location,
+                Type = Super_Rod,
                 Rate = (byte)SuperRate,
                 Slots = [],
             };
@@ -250,12 +250,12 @@ public static class DPEncounterExtensions
 {
     public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(this IEnumerable<IEnumerable<T>> sequences)
     {
-        IEnumerable<IEnumerable<T>> emptyProduct = new[] { Enumerable.Empty<T>() };
+        IEnumerable<IEnumerable<T>> emptyProduct = [[]];
         return sequences.Aggregate(
             emptyProduct,
             (accumulator, sequence) =>
                 from accseq in accumulator
                 from item in sequence
-                select accseq.Concat(new[] { item }));
+                select accseq.Concat([item]));
     }
 }

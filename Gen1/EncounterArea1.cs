@@ -70,7 +70,7 @@ public sealed record EncounterArea1
         Location = (byte)areaIndex,
         Rate = rate,
         Type = type,
-        Slots = GetSlots1GrassWater(data, ref ofs, type),
+        Slots = GetSlots1GrassWater(data, ref ofs),
     };
 
     /// <summary>
@@ -123,7 +123,7 @@ public sealed record EncounterArea1
         return areas;
     }
 
-    private static EncounterSlot1[] GetSlots1GrassWater(ReadOnlySpan<byte> data, ref int ofs, [ConstantExpected] SlotType1 type)
+    private static EncounterSlot1[] GetSlots1GrassWater(ReadOnlySpan<byte> data, ref int ofs)
     {
         return EncounterSlot1.ReadSlots(data, ref ofs, 10);
     }
