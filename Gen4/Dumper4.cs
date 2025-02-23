@@ -182,15 +182,20 @@ public static class Dumper4
             // Feebas replaces the encounter slot species.
             var temp = areas[i];
             var tSlots = temp.Slots;
-
-            var slots = new EncounterSlot4[tSlots.Length];
-            for (var j = 0; j < slots.Length; j++)
-                slots[j] = new() { Species = (int)Species.Feebas, LevelMin = 10, LevelMax = 20, SlotNumber = (byte)i };
-
-            result[i] = temp with { Slots = slots };
+            result[i] = temp with { Slots = GetFakeFeebasSlots(tSlots.Length) };
         }
 
         return result;
+    }
+
+    // Mt. Coronet Feebas: Game overwrites all slots with Feebas 10-20. Create fake slots to match.
+    // Feebas is unaffected by Static and Magnet Pull, so there's no need to retain any data present in the existing area slots.
+    private static EncounterSlot4[] GetFakeFeebasSlots(int count)
+    {
+        var slots = new EncounterSlot4[count];
+        for (var i = 0; i < slots.Length; i++)
+            slots[i] = new() { Species = (int)Species.Feebas, LevelMin = 10, LevelMax = 20, SlotNumber = (byte)i };
+        return slots;
     }
 
     private static ReadOnlySpan<byte> Shellos_EastSeaLocation_DP =>
