@@ -35,7 +35,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
     /// <returns>Array of encounter areas.</returns>
     public static EncounterArea4HGSS[] GetArray4HGSS(byte[][] entries)
     {
-        return entries.SelectMany(GetArea4HGSS).Where(Area => Area.Slots.Length != 0).ToArray();
+        return [..entries.SelectMany(GetArea4HGSS).Where(area => area.Slots.Length != 0)];
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
     /// <returns>Array of encounter areas.</returns>
     public static EncounterArea4HGSS[] GetArray4HGSS_Headbutt(byte[][] entries)
     {
-        return entries.SelectMany(GetArea4HeadbuttHGSS).Where(Area => Area.Slots.Length != 0).ToArray();
+        return [..entries.SelectMany(GetArea4HeadbuttHGSS).Where(area => area.Slots.Length != 0)];
     }
 
     private static EncounterSlot4[] GetSlots4GrassHGSS(byte[] data, int ofs, int numslots)
@@ -189,10 +189,10 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             yield return area;
         }
 
-        var s_grass = (Species)BitConverter.ToUInt16(data, 0xBE + 0); // Grass Swarm
-        var s_surf = (Species)BitConverter.ToUInt16(data, 0xBE + 2); // Surf Swarm
-        var s_good = (Species)BitConverter.ToUInt16(data, 0xBE + 4); // Good Night
-        var s_super = (Species)BitConverter.ToUInt16(data, 0xBE + 6); // Super Night
+        //var s_grass = (Species)BitConverter.ToUInt16(data, 0xBE + 0); // Grass Swarm
+        //var s_surf = (Species)BitConverter.ToUInt16(data, 0xBE + 2); // Surf Swarm
+        var s_fishNight = (Species)BitConverter.ToUInt16(data, 0xBE + 4); // Good Night
+        var s_fishSwarm = (Species)BitConverter.ToUInt16(data, 0xBE + 6); // Super Night
 
         if (OldRate > 0)
         {
@@ -205,10 +205,9 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             };
             GetSlots4WaterFishingHGSS(area, data, 0x82, 5, Old_Rod);
 
-            if (s_surf != 0 || s_grass != 0)
-            {
-                //throw new Exception(); // no night fish for old rod, sanity check
-            }
+            if (s_fishSwarm != 0) // 2
+                AddSlotFish(s_fishSwarm, 2, area);
+            // none for night
 
             yield return area;
         }
@@ -224,12 +223,13 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             };
             GetSlots4WaterFishingHGSS(area, data, 0x96, 5, Good_Rod);
 
-            if (s_good == Species.Staryu || (location == 219 && s_good == Species.Gyarados)) // Staryu @ Location = 182, 127, 130, 132, 167, 188, 210
+            if (s_fishNight != 0) // 3
+                AddSlotFish(s_fishNight, 3, area);
+            if (s_fishSwarm != 0) // 0,2,3
             {
-                var exist = area.Slots[1];
-                var slots = area.Slots.ToList();
-                slots.Insert(2, new EncounterSlot4 {Species = (ushort) s_good, LevelMin = exist.LevelMin, LevelMax = exist.LevelMax, SlotNumber = 1});
-                area.Slots = [.. slots];
+                AddSlotFish(s_fishSwarm, 3, area);
+                AddSlotFish(s_fishSwarm, 2, area);
+                AddSlotFish(s_fishSwarm, 0, area);
             }
 
             yield return area;
@@ -246,15 +246,34 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             };
             GetSlots4WaterFishingHGSS(area, data, 0xAA, 5, Super_Rod);
 
-            if (s_good == Species.Staryu || (location == 219 && s_good == Species.Gyarados)) // Staryu @ Location = 182, 127, 130, 132, 167, 188, 210
+            if (s_fishNight != 0) // 1
+                AddSlotFish(s_fishNight, 1, area);
+
+            if (s_fishSwarm != 0) // 4..0
             {
-                var exist = area.Slots[1];
-                var slots = area.Slots.ToList();
-                slots.Insert(2, new EncounterSlot4 { Species = (ushort)s_good, LevelMin = exist.LevelMin, LevelMax = exist.LevelMax, SlotNumber = 1 });
-                area.Slots = [.. slots];
+                AddSlotFish(s_fishSwarm, 4, area);
+                AddSlotFish(s_fishSwarm, 3, area);
+                AddSlotFish(s_fishSwarm, 2, area);
+                AddSlotFish(s_fishSwarm, 1, area);
+                AddSlotFish(s_fishSwarm, 0, area);
             }
+
             yield return area;
         }
+    }
+
+    private static void AddSlotFish(Species species, byte slot, EncounterArea4HGSS area)
+    {
+        var exist = area.Slots[slot];
+        if ((Species)exist.Species == species)
+            return; // same, don't duplicate.
+
+        var slots = area.Slots.ToList();
+        // No need to consider static/magnet pull; all override species are unaffected by either.
+        var newSlot = new EncounterSlot4 { Species = (ushort)species, LevelMin = exist.LevelMin, LevelMax = exist.LevelMax, SlotNumber = slot };
+        // Insert after existing slot, keep similar slot number order.
+        slots.Insert(slot + 1, newSlot);
+        area.Slots = [.. slots];
     }
 
     private static IEnumerable<EncounterArea4HGSS> GetArea4HeadbuttHGSS(byte[] data)

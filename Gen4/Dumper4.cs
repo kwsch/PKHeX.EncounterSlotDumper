@@ -314,6 +314,8 @@ public static class Dumper4
                 {
                     Species = swarm.Species,
                     Form = 0,
+                    MagnetPullCount = 0, StaticCount = 0,
+                    StaticIndex = 0, MagnetPullIndex = 0,
                 };
                 if (index != c0.SlotNumber)
                     throw new Exception();
@@ -340,9 +342,6 @@ public static class Dumper4
         Grass => [0, 1],
         // for surfing only replace slots 0 from encounters data
         Surf => [0],
-        Old_Rod => [2],
-        Good_Rod => [0, 2, 3],
-        Super_Rod => [0, 1, 2, 3, 4], // all
         _ => throw new Exception(),
     };
 
@@ -731,40 +730,20 @@ public static class Dumper4
         new(216, 183, Grass), // Marill @ Mt. Mortar
         new(220, 206, Grass, 1), // Dunsparce @ Dark Cave (Route 31 side; the r45 does not have Dunsparce swarm)
         new(224, 401, Grass), // Kricketot @ Viridian Forest
-
-        new(128, 340, Old_Rod),   // Whiscash @ Violet City
-        new(128, 340, Good_Rod),  // Whiscash @ Violet City
-        new(128, 340, Super_Rod), // Whiscash @ Violet City
-
-        new(160, 369, Old_Rod),   // Relicanth @ Route 12
-        new(160, 369, Good_Rod),  // Relicanth @ Route 12
-        new(160, 369, Super_Rod), // Relicanth @ Route 12
-
-        new(180, 211, Old_Rod),   // Qwilfish @ Route 32
-        new(180, 211, Good_Rod),  // Qwilfish @ Route 32
-        new(180, 211, Super_Rod), // Qwilfish @ Route 32
-
-        new(192, 223, Old_Rod),   // Remoraid @ Route 44
-        new(192, 223, Good_Rod),  // Remoraid @ Route 44
-        new(192, 223, Super_Rod), // Remoraid @ Route 44
     ];
 
     private static readonly SwarmDef[] SlotsHG_Swarm =
     [
         .. SlotsHGSS_Swarm,
-        .. new[] {
-            new SwarmDef(151, 343, Grass), // Baltoy @ Route 3
-            new SwarmDef(157, 302, Grass), // Sableye @ Route 9
-        },
+        new(151, 343, Grass), // Baltoy @ Route 3
+        new(157, 302, Grass), // Sableye @ Route 9
     ];
 
     private static readonly SwarmDef[] SlotsSS_Swarm =
     [
         .. SlotsHGSS_Swarm,
-        .. new[] {
-            new SwarmDef(151, 316, Grass), // Gulpin @ Route 3
-            new SwarmDef(157, 303, Grass), // Mawile @ Route 9
-        },
+        new(151, 316, Grass), // Gulpin @ Route 3
+        new(157, 303, Grass), // Mawile @ Route 9
     ];
     #endregion
 }
