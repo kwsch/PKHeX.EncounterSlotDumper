@@ -745,6 +745,57 @@ public static class Dumper4
         new(151, 316, Grass), // Gulpin @ Route 3
         new(157, 303, Grass), // Mawile @ Route 9
     ];
+
+    private const ushort MAP_ROUTE_1 = 9;// MAP_R01
+    private const ushort MAP_ROUTE_3 = 11;// MAP_R03
+    private const ushort MAP_ROUTE_9 = 17;// MAP_R09
+    private const ushort MAP_ROUTE_12 = 20;// MAP_R12
+    private const ushort MAP_ROUTE_13 = 21;// MAP_R13
+    private const ushort MAP_ROUTE_25 = 29;// MAP_R25
+    private const ushort MAP_ROUTE_27 = 31;// MAP_R27
+    private const ushort MAP_ROUTE_32 = 36;// MAP_R32
+    private const ushort MAP_ROUTE_34 = 38;// MAP_R34
+    private const ushort MAP_ROUTE_35 = 39;// MAP_R35
+    private const ushort MAP_ROUTE_38 = 42;// MAP_R38
+    private const ushort MAP_ROUTE_44 = 46;// MAP_R44
+    private const ushort MAP_ROUTE_45 = 47;// MAP_R45
+    private const ushort MAP_VERMILION = 54;// MAP_T06
+    private const ushort MAP_VIOLET = 73;// MAP_T22
+    private const ushort MAP_ROUTE_19 = 91;// MAP_W19
+    private const ushort MAP_MOUNT_MORTAR_1F_ENTRANCE = 119;// MAP_D38R0101
+    private const ushort MAP_VIRIDIAN_FOREST = 147;// MAP_D46R0101
+    private const ushort MAP_ROUTE_47 = 151;// MAP_R47
+    private const ushort MAP_DARK_CAVE_ROUTE_31_SIDE = 176;// MAP_D42R0102
+
+    // unused, kept for reference -- need the zonedata narc to get map->encTable mapping since we are currently only parsing encTable
+    public static bool IsFishSwarm(ushort location) => GetSwarmType(location) == 2;
+
+    // 0 = land, 1 = surf, 2 = fish
+    private static byte GetSwarmType(ushort location) => location switch
+    {
+        MAP_ROUTE_1 =>                   0,
+        MAP_ROUTE_3 =>                   0,
+        MAP_ROUTE_9 =>                   0,
+        MAP_ROUTE_12 =>                  2,
+        MAP_ROUTE_13 =>                  0,
+        MAP_ROUTE_19 =>                  1,
+        MAP_ROUTE_32 =>                  2,
+        MAP_ROUTE_25 =>                  0,
+        MAP_ROUTE_27 =>                  1,
+        MAP_ROUTE_34 =>                  0,
+        MAP_ROUTE_35 =>                  0,
+        MAP_ROUTE_38 =>                  0,
+        MAP_ROUTE_44 =>                  2,
+        MAP_ROUTE_45 =>                  0,
+        MAP_ROUTE_47 =>                  0,
+        MAP_MOUNT_MORTAR_1F_ENTRANCE =>  0,
+        MAP_DARK_CAVE_ROUTE_31_SIDE =>   0,
+        MAP_VIRIDIAN_FOREST =>           0,
+        MAP_VERMILION =>                 1,
+        MAP_VIOLET =>                    2,
+        _ => byte.MaxValue,
+    };
+
     #endregion
 }
 

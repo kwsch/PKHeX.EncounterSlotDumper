@@ -102,7 +102,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
         EncounterUtil.MarkEncountersStaticMagnetPull(area, PersonalTable.HGSS);
     }
 
-    private static IEnumerable<EncounterArea4HGSS> GetArea4HGSS(byte[] data)
+    private static IEnumerable<EncounterArea4HGSS> GetArea4HGSS(byte[] data, int index)
     {
         var Slots = new List<EncounterSlot4>();
         var location = BitConverter.ToUInt16(data, 0x00);
@@ -191,8 +191,10 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
         //var s_grass = (Species)BitConverter.ToUInt16(data, 0xBE + 0); // Grass Swarm
         //var s_surf = (Species)BitConverter.ToUInt16(data, 0xBE + 2); // Surf Swarm
-        var s_fishNight = (Species)BitConverter.ToUInt16(data, 0xBE + 4); // Good Night
-        var s_fishSwarm = (Species)BitConverter.ToUInt16(data, 0xBE + 6); // Super Night
+        var s_fishNight = (Species)BitConverter.ToUInt16(data, 0xBE + 4); // Fishing Nighttime
+        var s_fishSwarm = (Species)BitConverter.ToUInt16(data, 0xBE + 6); // Fishing Swarm
+
+        bool isFishSwarm = s_fishSwarm is not (0 or Species.Magikarp or Species.Goldeen or Species.Poliwag);
 
         if (OldRate > 0)
         {
@@ -205,7 +207,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             };
             GetSlots4WaterFishingHGSS(area, data, 0x82, 5, Old_Rod);
 
-            if (s_fishSwarm != 0) // 2
+            if (isFishSwarm) // 2
                 AddSlotFish(s_fishSwarm, 2, area);
             // none for night
 
@@ -225,7 +227,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
 
             if (s_fishNight != 0) // 3
                 AddSlotFish(s_fishNight, 3, area);
-            if (s_fishSwarm != 0) // 0,2,3
+            if (isFishSwarm) // 0,2,3
             {
                 AddSlotFish(s_fishSwarm, 3, area);
                 AddSlotFish(s_fishSwarm, 2, area);
@@ -249,7 +251,7 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             if (s_fishNight != 0) // 1
                 AddSlotFish(s_fishNight, 1, area);
 
-            if (s_fishSwarm != 0) // 4..0
+            if (isFishSwarm) // 4..0
             {
                 AddSlotFish(s_fishSwarm, 4, area);
                 AddSlotFish(s_fishSwarm, 3, area);
