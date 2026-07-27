@@ -122,6 +122,12 @@ public sealed record EncounterArea4HGSS : EncounterArea4
             // First 36 slots are morning, day and night grass slots
             // The order is 12 level values, 12 morning species, 12 day species and 12 night species
             var GrassSlots = GetSlots4GrassHGSS(data, 0x0A, 12);
+
+            // skip placeholder tables for BCC (Caterpie, Weedle) and Safari (Rattata)
+            var last = (Species)GrassSlots[^1].Species;
+            if (last is Species.Rattata or Species.Caterpie or Species.Weedle && (GrassSlots.All(z => z.Species == (ushort)last)))
+                yield break;
+
             //Grass slots with species = 0 are added too, it is needed for the swarm encounters, it will be deleted after swarms are added
 
             // Hoenn Sound and Sinnoh Sound replace slots 4 and 5

@@ -91,7 +91,7 @@ public static class Dumper4Safari
             Location = SafariZoneMetLocation,
             Type = type,
             Slots = condensed,
-            Rate = (byte)index,
+            Rate = 20, // from placeholder map Rate value.
         };
     }
 

@@ -801,7 +801,7 @@ public static class Dumper4
 
 public static class Encounters4Extra
 {
-    private const byte RateBCC = 25; // Assumed same as the underlying area (National Park, grass)
+    private const byte RateBCC = 25; // Same as the underlying area (National Park, grass)
 
     private static readonly EncounterArea4HGSS BCC_PreNational = new()
     {
